@@ -22,6 +22,9 @@ public class CajerosDAO implements CRUD {
     private ResultSet rs;
     //Objetos controladores
     private ErroresDAO error = new ErroresDAO();
+    //funcionalidades de control
+    public static final int AGREGAR = 0;
+    public static final int MODIFICAR = 1;
 
     //metodos personalizados
     private void RegistrarError(String modulo,String mensaje) {
@@ -104,6 +107,31 @@ public class CajerosDAO implements CRUD {
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                CAJERO c = new CAJERO();
+                c.setRut_cajero(rs.getString("rut_cajero"));
+                c.setNombre(rs.getString("nombre"));
+                c.setFk_sucursal(rs.getInt("fk_sucursal_id"));
+                c.setAdministrador(rs.getInt("administrador"));
+                c.setEstado_login(rs.getInt("estado"));
+                lista.add(c);
+            }
+            con.close();
+
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.listar()", e.getMessage());
+        }
+        return lista;
+    }
+    
+    public List listar(int sucursal) {
+        List<CAJERO> lista = new ArrayList<>();
+        String sql = "select rut_cajero,nombre,fk_sucursal_id,administrador,estado from CAJERO where fk_sucursal_id = ? order by fk_sucursal_id";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, sucursal);
             rs = ps.executeQuery();
             while (rs.next()) {
                 CAJERO c = new CAJERO();

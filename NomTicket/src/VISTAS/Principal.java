@@ -345,7 +345,8 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBProductosActionPerformed
 
     private void jBUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBUsuariosActionPerformed
-        // TODO add your handling code here:
+        AdminCajero adminCaja = new AdminCajero(new javax.swing.JDialog(),true);
+        cambiarModulo(adminCaja);
     }//GEN-LAST:event_jBUsuariosActionPerformed
 
     private void jBInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBInformesActionPerformed

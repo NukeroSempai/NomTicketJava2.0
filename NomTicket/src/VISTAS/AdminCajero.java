@@ -1,5 +1,6 @@
 package VISTAS;
 
+import CONTROLADOR.CajerosDAO;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
 import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
+import MODELOS.CAJERO;
 import javax.swing.JDialog;
 
 /**
@@ -16,105 +18,131 @@ import javax.swing.JDialog;
  * @author Nukero
  * @version 1.0
  */
-public class AdminProductos extends javax.swing.JDialog {
+public class AdminCajero extends javax.swing.JDialog {
 
-    private ProductosDAO dao = new ProductosDAO();
-    private PRODUCTO p = new PRODUCTO();
-    private List<String> tipoProd = dao.listarTipo();
+    private CajerosDAO dao = new CajerosDAO();
+    private CAJERO c = new CAJERO();
+    private List<String> sucursales = dao.listarSucursales();
     private EVENTOS event = new EVENTOS();
 
     private DefaultTableModel modelo = new DefaultTableModel();
     private int fila;
-    
-    JDProducto JDProd;
 
-    public AdminProductos(javax.swing.JDialog parent, boolean modal) {
+    JDCajero JDcaj;
+
+    public AdminCajero(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
         inicializar();
     }
-    
-    private void inicializar(){
+
+    private void inicializar() {
         cargarCombo();
         limpiarTabla();
         listar();
     }
-    
-    private void cargarCombo(){
-        for (int i = 0; i < tipoProd.size(); i++) {
-            jComboCategoria.addItem(tipoProd.get(i));
+
+    private void cargarCombo() {
+        for (int i = 0; i < sucursales.size(); i++) {
+            jComboCategoria.addItem(sucursales.get(i));
         }
     }
-    
-    private void listar(){
-        List<PRODUCTO> lista = dao.listar();
+
+    private void listar() {
+        List<CAJERO> lista = dao.listar();
 
         modelo = (DefaultTableModel) tabla.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getCodigo_producto();
+            ob[0] = lista.get(i).getRut_cajero();
             ob[1] = lista.get(i).getNombre();
-            ob[2] = lista.get(i).getDescripcion();            
-            ob[3] = tipoProd.get(lista.get(i).getFk_tipo_producto()-1);
-            ob[4] = lista.get(i).getPrecio();
+            if (lista.get(i).getEstado_login() == 1) {
+                ob[2] = "Habilitado";
+            } else {
+                ob[2] = "Deshabilitado";
+            }
+            if (lista.get(i).getAdministrador() == 1) {
+                ob[3] = "SI";
+            } else {
+                ob[3] = "NO";
+            }
+            ob[4] = sucursales.get(lista.get(i).getFk_sucursal() - 1);
             modelo.addRow(ob);
         }
         tabla.setModel(modelo);
     }
+
     //sobrecarga de metodo
-    private void listar(int categoria){
-        List<PRODUCTO> lista = dao.listar(categoria);
+    private void listar(int sucursal) {
+        List<CAJERO> lista = dao.listar(sucursal);
 
         modelo = (DefaultTableModel) tabla.getModel();
         Object[] ob = new Object[5];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getCodigo_producto();
+            ob[0] = lista.get(i).getRut_cajero();
             ob[1] = lista.get(i).getNombre();
-            ob[2] = lista.get(i).getDescripcion();            
-            ob[3] = tipoProd.get(lista.get(i).getFk_tipo_producto()-1);
-            ob[4] = lista.get(i).getPrecio();
+            if (lista.get(i).getEstado_login() == 1) {
+                ob[2] = "Habilitado";
+            } else {
+                ob[2] = "Deshabilitado";
+            }
+            if (lista.get(i).getAdministrador() == 1) {
+                ob[3] = "SI";
+            } else {
+                ob[3] = "NO";
+            }
+            ob[4] = sucursales.get(lista.get(i).getFk_sucursal() - 1);
             modelo.addRow(ob);
         }
         tabla.setModel(modelo);
     }
-    
-    private void buscar(){
-        p=dao.listarCodigo(Integer.parseInt(jTtBuscar.getText()));
+
+    private void buscar() {
+        c = dao.BuscarCajero(jTtBuscar.getText());
         modelo = (DefaultTableModel) tabla.getModel();
         Object[] ob = new Object[5];
-        ob[0] = p.getCodigo_producto();
-        ob[1] = p.getNombre();
-        ob[2] = p.getDescripcion();
-        ob[3] = tipoProd.get(p.getFk_tipo_producto()-1);
-        ob[4] = p.getPrecio();
+        ob[0] = c.getRut_cajero();
+        ob[1] = c.getNombre();
+        if (c.getEstado_login() == 1) {
+            ob[2] = "Habilitado";
+        } else {
+            ob[2] = "Deshabilitado";
+        }
+        if (c.getAdministrador() == 1) {
+            ob[3] = "SI";
+        } else {
+            ob[3] = "NO";
+        }
+        ob[4] = sucursales.get(c.getFk_sucursal() - 1);
+
         modelo.addRow(ob);
         tabla.setModel(modelo);
     }
-    
-    private void Eliminar(){
+
+    private void Eliminar() {
         fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {
-            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar producto?");
+            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar Cajero?");
             if (respuesta == 0) {
-                if (dao.eliminar(""+p.getCodigo_producto()) > 0) {                    
-                    JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente","Exito!",JOptionPane.INFORMATION_MESSAGE);
+                if (dao.eliminar(c.getRut_cajero()) > 0) {
+                    JOptionPane.showMessageDialog(null, "Cajero eliminado exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, "error al eliminar producto", "error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "error al eliminar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }
-    
-    private void limpiarTabla(){
+
+    private void limpiarTabla() {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             modelo.removeRow(i);
             i = i - 1;
         }
     }
-    
-    private void cambiarModulo(JDialog dialogo){
+
+    private void cambiarModulo(JDialog dialogo) {
         this.setEnabled(false);
         this.setVisible(false);
         dialogo.setLocationRelativeTo(this);
@@ -238,7 +266,7 @@ public class AdminProductos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Descripción", "Precio", "Tipo"
+                "Rut", "Nombre", "Estado", "Administrador", "Sucursal"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -276,7 +304,7 @@ public class AdminProductos extends javax.swing.JDialog {
         jPanel12.setBackground(new java.awt.Color(153, 153, 153));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel5.setText("Productos");
+        jLabel5.setText("Cajeros");
 
         jPanel13.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -357,10 +385,11 @@ public class AdminProductos extends javax.swing.JDialog {
                 .addGap(13, 13, 13)
                 .addComponent(jLRut)
                 .addGap(7, 7, 7)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBFiltrar)
-                    .addComponent(jBLimpiar)
-                    .addComponent(jComboCategoria))
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboCategoria)
+                    .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jBFiltrar)
+                        .addComponent(jBLimpiar)))
                 .addContainerGap())
         );
 
@@ -375,10 +404,10 @@ public class AdminProductos extends javax.swing.JDialog {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jBVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,8 +428,8 @@ public class AdminProductos extends javax.swing.JDialog {
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
-                        .addGap(130, 130, 130)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel12Layout.setVerticalGroup(
@@ -438,14 +467,13 @@ public class AdminProductos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -486,9 +514,9 @@ public class AdminProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_jBVolverActionPerformed
 
     private void jBRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRegistrarActionPerformed
-        JDProd = new JDProducto(new javax.swing.JDialog(), true);
-        JDProd.setModalidad(ProductosDAO.AGREGAR);
-        cambiarModulo(JDProd);
+        JDcaj = new JDCajero(new javax.swing.JDialog(), true);
+        JDcaj.setModalidad(CajerosDAO.AGREGAR);
+        cambiarModulo(JDcaj);
         limpiarTabla();
         listar();
     }//GEN-LAST:event_jBRegistrarActionPerformed
@@ -497,14 +525,14 @@ public class AdminProductos extends javax.swing.JDialog {
         fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
-        }else{
-            JDProd = new JDProducto(new javax.swing.JDialog(), true);
-            JDProd.setModalidad(ProductosDAO.MODIFICAR);
-            JDProd.setProducto(p);
-            cambiarModulo(JDProd);
+        } else {
+            JDcaj = new JDCajero(new javax.swing.JDialog(), true);
+            JDcaj.setModalidad(CajerosDAO.MODIFICAR);
+            JDcaj.setCajero(c);
+            cambiarModulo(JDcaj);
             limpiarTabla();
             listar();
-        }        
+        }
     }//GEN-LAST:event_jBModificarActionPerformed
 
     private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
@@ -515,7 +543,7 @@ public class AdminProductos extends javax.swing.JDialog {
 
     private void jBFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFiltrarActionPerformed
         limpiarTabla();
-        listar(jComboCategoria.getSelectedIndex()+1);
+        listar(jComboCategoria.getSelectedIndex() + 1);
     }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
@@ -528,17 +556,28 @@ public class AdminProductos extends javax.swing.JDialog {
         fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
-        } else {            
-            String codigo = tabla.getValueAt(fila, 0).toString(); 
+        } else {
+            int estado;
+            int administrador;
+            String rut = tabla.getValueAt(fila, 0).toString();
             String nombre = tabla.getValueAt(fila, 1).toString();
-            String descripcion = tabla.getValueAt(fila, 2).toString(); 
-            String tipoProducto = tabla.getValueAt(fila, 3).toString();
-            String precio = tabla.getValueAt(fila, 4).toString();            
-            p.setCodigo_producto(Integer.parseInt(codigo));
-            p.setNombre(nombre);
-            p.setDescripcion(descripcion);
-            p.setFk_tipo_producto(tipoProd.indexOf(tipoProducto));
-            p.setPrecio(Integer.parseInt(precio));
+            if(tabla.getValueAt(fila, 2).toString().equals("Habilitado")){
+                estado = 1;
+            }else{
+                estado = 0;
+            }
+            if(tabla.getValueAt(fila, 3).toString().equals("SI")){
+                administrador = 1;
+            }else{
+                administrador = 0;
+            }            
+            String sucursal = tabla.getValueAt(fila, 4).toString();
+            c.setRut_cajero(rut);
+            c.setNombre(nombre);
+            c.setClave("");
+            c.setEstado_login(estado);
+            c.setAdministrador(administrador);
+            c.setFk_sucursal(sucursales.indexOf(sucursal));
         }
     }//GEN-LAST:event_tablaMouseClicked
 
@@ -568,20 +607,21 @@ public class AdminProductos extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminCajero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminCajero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminCajero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminCajero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AdminProductos dialog = new AdminProductos(new javax.swing.JDialog(), true);
+                AdminCajero dialog = new AdminCajero(new javax.swing.JDialog(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -601,27 +641,13 @@ public class AdminProductos extends javax.swing.JDialog {
     private javax.swing.JButton jBModificar;
     private javax.swing.JButton jBRegistrar;
     private javax.swing.JButton jBVolver;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboCategoria;
     private javax.swing.JLabel jLRut;
     private javax.swing.JLabel jLRut1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
@@ -630,10 +656,6 @@ public class AdminProductos extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTtBuscar;
     private javax.swing.JTable tabla;
