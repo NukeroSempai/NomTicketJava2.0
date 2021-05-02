@@ -24,6 +24,14 @@ public class CajerosDAO implements CRUD {
     private ErroresDAO error = new ErroresDAO();
 
     //metodos personalizados
+    private void RegistrarError(String modulo,String mensaje) {
+        System.out.println("error packete "+ modulo +" error : =  " + mensaje);
+        Object[] O = new Object[4];
+        O[2] = modulo;
+        O[3] = mensaje;
+        error.add(O);
+    }
+    
     public boolean VerificarSuperUsuario(String rut) {
         boolean admin = false;
         String sql = "select administrador from CAJERO where rut_cajero =?";
@@ -40,12 +48,8 @@ public class CajerosDAO implements CRUD {
                 }
             }
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.VerificarSuperUsuario() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.VerificarSuperUsuario()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.VerificarSuperUsuario()", e.getMessage());
         }
         return admin;
     }
@@ -64,12 +68,8 @@ public class CajerosDAO implements CRUD {
             }
             con.close();
 
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.ListarSucursales() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.ListarSucursales()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.ListarSucursales()", e.getMessage());
         }
         return lista;
     }
@@ -90,12 +90,8 @@ public class CajerosDAO implements CRUD {
                 cajero.setFk_sucursal(rs.getInt("fk_sucursal_id"));                
             }
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.BuscarCajero() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.BuscarCajero()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.BuscarCajero()", e.getMessage());
         }
         return cajero;
     }
@@ -120,12 +116,8 @@ public class CajerosDAO implements CRUD {
             }
             con.close();
 
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.listar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.listar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.listar()", e.getMessage());
         }
         return lista;
     }
@@ -145,12 +137,8 @@ public class CajerosDAO implements CRUD {
             ps.setObject(6, o[5]);//estado            
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.add() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.add()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.add()", e.getMessage());
         }
         return r;
     }
@@ -170,12 +158,8 @@ public class CajerosDAO implements CRUD {
             ps.setObject(6, o[5]);// rut cajero a actualizar
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.actualizar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.actualizar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.actualizar()", e.getMessage());
         }
         return r;
     }
@@ -196,12 +180,8 @@ public class CajerosDAO implements CRUD {
             ps.setObject(7, o[5]);// rut cajero a actualizar
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.actualizar(Object,String clave) error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.actualizar(Object,String clave)";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.actualizar(Object,String clave)", e.getMessage());
         }
         return r;
     }
@@ -216,12 +196,8 @@ public class CajerosDAO implements CRUD {
             ps.setString(1, id);
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.CajerosDAO.eliminar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.CajerosDAO.eliminar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.eliminar()", e.getMessage());
         }
         return r;
     }

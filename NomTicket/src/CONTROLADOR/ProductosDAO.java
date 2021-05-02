@@ -1,4 +1,3 @@
-
 package CONTROLADOR;
 
 import CONEXION_BD.Conexion;
@@ -14,18 +13,29 @@ import java.util.List;
  * @author Nukero
  * @version 1.0
  */
-public class ProductosDAO implements CRUD{
-    
+public class ProductosDAO implements CRUD {
+
     //objetos SQL
     Connection con;
     Conexion cn = new Conexion();
     PreparedStatement ps;
     ResultSet rs;
-    
+
     //Objetos controladores
     private ErroresDAO error = new ErroresDAO();
-    
+    //FUNCIONES DE CONTROLADOR
+    public static final int AGREGAR = 0;
+    public static final int MODIFICAR = 1;
+
     //metodos personalizados
+    private void RegistrarError(String modulo,String mensaje) {
+        System.out.println("error packete "+ modulo +" error : =  " + mensaje);
+        Object[] O = new Object[4];
+        O[2] = modulo;
+        O[3] = mensaje;
+        error.add(O);
+    }
+
     //reparar para que traiga el objeto
     public List listarTipo() {
         List<String> lista = new ArrayList<>();
@@ -42,15 +52,11 @@ public class ProductosDAO implements CRUD{
             con.close();
 
         } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.ListarTipo() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.ListarTipo()";
-            O[3] = e.getMessage();
-            error.add(O);
+            RegistrarError("CONTROLADOR.ProductosDAO.ListarTipo()", e.getMessage());            
         }
         return lista;
     }
-    
+
     public PRODUCTO listarCodigo(int codigo) {
         PRODUCTO p = new PRODUCTO();
         String sql = "select * from PRODUCTO where codigo_producto=?";
@@ -66,16 +72,14 @@ public class ProductosDAO implements CRUD{
                 p.setPrecio(rs.getInt(4));
                 p.setFk_tipo_producto(rs.getInt(5));
             }
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.ListarCodigo() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.ListarCodigo()";
-            O[3] = e.getMessage();
-            error.add(O);
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.ListarCodigo()", e.getMessage());
 
         }
         return p;
     }
+
     //metodos de interfaz
     @Override
     public List listar() {
@@ -96,12 +100,33 @@ public class ProductosDAO implements CRUD{
             }
             con.close();
 
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.Listar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.Listar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.Listar()", e.getMessage());
+        }
+        return lista;
+    }
+    //sobrecarga de metodo
+    public List listar(int categoria) {
+        List<PRODUCTO> lista = new ArrayList<>();
+        String sql = "select * from PRODUCTO where fk_tipo_producto_id = ? order by codigo_producto desc";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, categoria);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                PRODUCTO p = new PRODUCTO();
+                p.setCodigo_producto(rs.getInt("codigo_producto"));
+                p.setNombre(rs.getString("nom_producto"));
+                p.setDescripcion(rs.getString("descripcion"));
+                p.setFk_tipo_producto(rs.getInt("fk_tipo_producto_id"));
+                p.setPrecio(rs.getInt("precio"));
+                lista.add(p);
+            }
+            con.close();
+
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.Listar(int categoria)", e.getMessage());
         }
         return lista;
     }
@@ -114,18 +139,14 @@ public class ProductosDAO implements CRUD{
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
             //el codigo del producto es generado directamente en la base de datos por una secuencia. este dato sera omitido
-            ps.setObject(1, o[1]);//nombre
-            ps.setObject(2, o[2]);//descripcion
-            ps.setObject(3, o[3]);//tipo producto
-            ps.setObject(4, o[4]);//precio
+            ps.setObject(1, o[0]);//nombre
+            ps.setObject(2, o[1]);//descripcion
+            ps.setObject(3, o[2]);//tipo producto
+            ps.setObject(4, o[3]);//precio
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.add() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.add()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.add()", e.getMessage().toString());
         }
         return r;
     }
@@ -145,12 +166,8 @@ public class ProductosDAO implements CRUD{
             ps.setObject(6, o[5]);
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.actualizar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.actualizar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.actualizar()", e.getMessage());
         }
         return r;
     }
@@ -165,15 +182,9 @@ public class ProductosDAO implements CRUD{
             ps.setInt(1, Integer.parseInt(id));
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {
-            System.out.println("error packete CONTROLADOR.ProductosDAO.eliminar() error : =  " + e.getMessage());
-            Object[] O = new Object[4];
-            O[2] = "CONTROLADOR.ProductosDAO.eliminar()";
-            O[3] = e.getMessage();
-            error.add(O);
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.eliminar()", e.getMessage());
         }
         return r;
     }
-    
-    
 }

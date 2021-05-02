@@ -56,7 +56,7 @@ public class ErroresDAO implements CRUD {
             //la fecha se maneja directamente desde la base de datos. este parametro sera omitido
             ps.setObject(1, o[2]); //modulo
             ps.setObject(2, o[3]); //descripcion
-            
+            r = ps.executeUpdate();
         } catch (Exception e) {
             System.out.println("error packete CONTROLADOR.ErroresDAO.add() error : = "+e.getMessage());
         }

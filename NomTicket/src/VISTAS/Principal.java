@@ -1,6 +1,7 @@
 package VISTAS;
 
 import MODELOS.CAJERO;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -54,7 +55,16 @@ public class Principal extends javax.swing.JFrame {
         if(usuario.getAdministrador()==1){
             SetOpcionesAdministrador(true);
         }
-
+    }
+    
+    private void cambiarModulo(JDialog dialogo){
+        this.setEnabled(false);
+        this.setVisible(false);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setDefaultCloseOperation(0);
+        dialogo.setVisible(true);
+        this.setEnabled(true);
+        this.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -144,17 +154,42 @@ public class Principal extends javax.swing.JFrame {
         );
 
         jBVentas.setText("VENTAS");
+        jBVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBVentasActionPerformed(evt);
+            }
+        });
 
         jBProductos.setText("PRODUCTOS");
+        jBProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBProductosActionPerformed(evt);
+            }
+        });
 
         jBUsuarios.setText("USUARIOS");
+        jBUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBUsuariosActionPerformed(evt);
+            }
+        });
 
         jBInformes.setText("INFORMES");
+        jBInformes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBInformesActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setText("OPCIONES");
 
         jBPerfil.setText("PERFIL");
+        jBPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBPerfilActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -298,6 +333,28 @@ public class Principal extends javax.swing.JFrame {
     private void jBCerrarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarSesion1ActionPerformed
         inicializar();
     }//GEN-LAST:event_jBCerrarSesion1ActionPerformed
+
+    private void jBVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBVentasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBVentasActionPerformed
+
+    private void jBProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBProductosActionPerformed
+        AdminProductos adminProd = new AdminProductos(new javax.swing.JDialog(),true);
+        cambiarModulo(adminProd);
+        
+    }//GEN-LAST:event_jBProductosActionPerformed
+
+    private void jBUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBUsuariosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBUsuariosActionPerformed
+
+    private void jBInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBInformesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBInformesActionPerformed
+
+    private void jBPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBPerfilActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
