@@ -135,21 +135,13 @@ public class JDCajero extends javax.swing.JDialog {
         obj[2] = sucursal;
         obj[3] = administrador;
         obj[4] = estado;
-        obj[5] = c.getRut_cajero();
-        System.out.println("rut ="+obj[0]);
-        System.out.println("nombre ="+obj[1]);
-        System.out.println("clave ="+clave);
-        System.out.println("sucursal ="+obj[2]);
-        System.out.println("administrador ="+obj[3]);
-        System.out.println("estado ="+obj[4]);
-        System.out.println("rut de where ="+obj[5]);
-        /*
+        obj[5] = c.getRut_cajero();               
         if (dao.actualizar(obj, clave) > 0) {
             JOptionPane.showMessageDialog(null, "Cajero Actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "error al Actualizar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
         }
-        */
+        
 
     }
 

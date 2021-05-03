@@ -335,7 +335,9 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBCerrarSesion1ActionPerformed
 
     private void jBVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBVentasActionPerformed
-        // TODO add your handling code here:
+        AdminVenta adminVen = new AdminVenta(new javax.swing.JDialog(),true);
+        adminVen.setCajero(usuario);
+        cambiarModulo(adminVen);
     }//GEN-LAST:event_jBVentasActionPerformed
 
     private void jBProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBProductosActionPerformed
