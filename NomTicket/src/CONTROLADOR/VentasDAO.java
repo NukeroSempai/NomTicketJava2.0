@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -35,6 +36,7 @@ public class VentasDAO implements CRUD {
     public static final int AGREGAR = 0;
     public static final int MODIFICAR = 1;
 
+    public static List<Object[]> CarroCompra = new ArrayList<>();
     //metodos personalizados
     private void RegistrarError(String modulo, String mensaje) {
         System.out.println("error packete " + modulo + " error : =  " + mensaje);

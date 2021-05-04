@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
 import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
+import CONTROLADOR.VentasDAO;
 import MODELOS.CAJERO;
 import SEGURIDAD.Seguridad;
 import java.util.Vector;
@@ -510,6 +511,7 @@ public class JDVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
+        //actualizar lista de objetos de DAO
         this.dispose();
     }//GEN-LAST:event_jBCancelarActionPerformed
 
@@ -558,7 +560,16 @@ public class JDVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBFiltrar1ActionPerformed
 
     private void jBFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFinalizarActionPerformed
-        // TODO add your handling code here:
+        //VentasDAO.modelo = (DefaultTableModel) jTablePedido.getModel();
+        for (int i = 0; i < jTablePedido.getRowCount(); i++) { 
+            Object[] o = new Object[4];
+            o[0] =jTablePedido.getValueAt(i, 0);
+            o[1] =jTablePedido.getValueAt(i, 1);
+            o[2] =jTablePedido.getValueAt(i, 2);
+            o[3] =jTablePedido.getValueAt(i, 3);
+            VentasDAO.CarroCompra.add(o);            
+        }
+        this.dispose();
     }//GEN-LAST:event_jBFinalizarActionPerformed
 
     private void jBQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQuitarActionPerformed

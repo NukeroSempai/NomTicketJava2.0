@@ -12,6 +12,7 @@ import MODELOS.BOLETA;
 import MODELOS.CAJERO;
 import MODELOS.PEDIDO_TICKET;
 import MODELOS.TICKET;
+import java.util.Vector;
 import javax.swing.JDialog;
 
 /**
@@ -29,6 +30,7 @@ public class AdminVenta extends javax.swing.JDialog {
     private TICKET ticket = new TICKET();
 
     private DefaultTableModel modelo = new DefaultTableModel();
+
     private int fila;
 
     JDVenta JDVent;
@@ -38,7 +40,7 @@ public class AdminVenta extends javax.swing.JDialog {
         initComponents();
         inicializar();
         jTNumeroBoleta.setText(""+generarNumeroBoleta());
-        
+        //jTNumeroBoleta.setText("0");    <----------- comando para hacer pruebas. (borrar boleta 0 previamente antes de ejecutar)
     }
 
     private Integer generarNumeroBoleta() {
@@ -90,7 +92,7 @@ public class AdminVenta extends javax.swing.JDialog {
     }
 
     private void limpiarCampos() {
-        jTNumeroBoleta.setText("");
+        jTNumeroBoleta.setText(""+generarNumeroBoleta());
         jTBuscarTicket.setText("");
         jTBuscarTicket.setEnabled(true);
         jTFecha.setText(dao.recuperarFecha());
@@ -127,10 +129,10 @@ public class AdminVenta extends javax.swing.JDialog {
             boleta[4] = cTicket;
             boleta[5] = fPago;
             boleta[6] = rCajero;
-            if (dao.add(boleta) > 0) {                
+            if (dao.add(boleta) > 0) {
                 guardarDetalle();
                 JOptionPane.showMessageDialog(null, "Venta exitosa", "Exito!", JOptionPane.DEFAULT_OPTION);
-                if(cTicket!=null){
+                if (cTicket != null) {
                     dao.DeshabilitarTicket(cTicket);
                 }
                 limpiarCampos();
@@ -150,7 +152,6 @@ public class AdminVenta extends javax.swing.JDialog {
             dao.addDetalle(o);
         }
     }
-    
 
     private void limpiarTabla() {
         for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -240,6 +241,13 @@ public class AdminVenta extends javax.swing.JDialog {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
@@ -738,12 +746,27 @@ public class AdminVenta extends javax.swing.JDialog {
             if (ticket.getEstado() != 1) {
                 System.out.println("ticket no habilitado");
                 JOptionPane.showMessageDialog(null, "Ticket no Valido", "error!", JOptionPane.ERROR_MESSAGE);
-            }else{
-                limpiarTabla();
-                listar();
-                calcularTotal();
-                jTBuscarTicket.setEnabled(false);
-            }            
+            } else {
+                if (tabla.getRowCount() > 0) {
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Mantener pedido de productos?");
+                    if (respuesta == 0) {
+                        listar();
+                        calcularTotal();
+                        jTBuscarTicket.setEnabled(false);
+                    } else {
+                        limpiarTabla();
+                        listar();
+                        calcularTotal();
+                        jTBuscarTicket.setEnabled(false);
+                    }
+                } else {
+                    limpiarTabla();
+                    listar();
+                    calcularTotal();
+                    jTBuscarTicket.setEnabled(false);
+                }
+
+            }
         } else {
             JOptionPane.showMessageDialog(null, "Debe ingresar un codigo", "error!", JOptionPane.ERROR_MESSAGE);
         }
@@ -751,9 +774,24 @@ public class AdminVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCargarTicketActionPerformed
 
     private void jBSeleccionarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSeleccionarProductoActionPerformed
-        JDVent = new JDVenta(new javax.swing.JDialog(), true);        
+        JDVent = new JDVenta(new javax.swing.JDialog(), true);
         cambiarModulo(JDVent);
     }//GEN-LAST:event_jBSeleccionarProductoActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        modelo = (DefaultTableModel) tabla.getModel();
+        Object[] ob = new Object[4];
+        for (int i = 0; i < VentasDAO.CarroCompra.size(); i++) {
+            ob[0] = VentasDAO.CarroCompra.get(i)[0];
+            ob[1] = VentasDAO.CarroCompra.get(i)[1];
+            ob[2] = VentasDAO.CarroCompra.get(i)[2];
+            ob[3] = VentasDAO.CarroCompra.get(i)[3];
+            modelo.addRow(ob);
+        }
+        tabla.setModel(modelo);
+        VentasDAO.CarroCompra.clear();
+        calcularTotal();
+    }//GEN-LAST:event_formWindowGainedFocus
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
