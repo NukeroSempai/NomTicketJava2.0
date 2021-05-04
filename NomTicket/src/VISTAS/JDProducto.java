@@ -128,9 +128,10 @@ public class JDProducto extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 102));
+        jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
         jLabelModalidadEntrada.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabelModalidadEntrada.setForeground(new java.awt.Color(255, 255, 255));
         jLabelModalidadEntrada.setText("<Modo Entrada>");
 
         jLRut1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

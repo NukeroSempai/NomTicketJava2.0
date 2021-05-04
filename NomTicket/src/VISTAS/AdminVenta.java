@@ -37,6 +37,14 @@ public class AdminVenta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         inicializar();
+        //jTNumeroBoleta.setText(""+generarNumeroBoleta());
+        jTNumeroBoleta.setText("" + 0);
+    }
+
+    private Integer generarNumeroBoleta() {
+        Integer numero = null;
+        numero = dao.GenerarIdBoleta();
+        return numero;
     }
 
     private void inicializar() {
@@ -74,54 +82,76 @@ public class AdminVenta extends javax.swing.JDialog {
         for (int i = 0; i < tabla.getRowCount(); i++) {
             tPagar += Integer.parseInt(tabla.getValueAt(i, 3).toString());
         }
-        jLSubTotal.setText("" + tPagar);        
+        jLSubTotal.setText("" + tPagar);
         jLTotal.setText("" + (Integer.parseInt(jLSubTotal.getText()) - Integer.parseInt(jLDescuento.getText())));
-        if(Integer.parseInt(jLTotal.getText())<=0){
+        if (Integer.parseInt(jLTotal.getText()) <= 0) {
             jLTotal.setText("0");
         }
     }
 
-    //sobrecarga de metodo
-    /*
-    private void buscar() {
-        b = dao.BuscarCajero(jTtBuscar.getText());
-        modelo = (DefaultTableModel) tabla.getModel();
-        Object[] ob = new Object[5];
-        ob[0] = b.getRut_cajero();
-        ob[1] = b.getNombre();
-        if (b.getEstado_login() == 1) {
-            ob[2] = "Habilitado";
-        } else {
-            ob[2] = "Deshabilitado";
-        }
-        if (b.getAdministrador() == 1) {
-            ob[3] = "SI";
-        } else {
-            ob[3] = "NO";
-        }
-        ob[4] = formaPago.get(b.getFk_sucursal() - 1);
+    private void limpiarCampos() {
+        jTNumeroBoleta.setText("");
+        jTBuscarTicket.setText("");
+        jTBuscarTicket.setEnabled(true);
+        jTFecha.setText(dao.recuperarFecha());
+        jComboFormaPago.setSelectedIndex(0);
+        jLDescuento.setText("0");
+        jLSubTotal.setText("0");
+        jLTotal.setText("0");
+        limpiarTabla();
+        ticket = new TICKET();
 
-        modelo.addRow(ob);
-        tabla.setModel(modelo);
     }
-     */
- /*
-    private void Eliminar() {
-        fila = tabla.getSelectedRow();
-        if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
+
+    private void realizarVenta() {
+        int vTotal = Integer.parseInt(jLSubTotal.getText());
+        int vTicket = Integer.parseInt(jLDescuento.getText());
+        int SxPagar = Integer.parseInt(jLTotal.getText());
+        Integer cTicket;
+        if (!jTBuscarTicket.getText().equals("")) {
+            cTicket = Integer.parseInt(jTBuscarTicket.getText());
         } else {
-            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar Cajero?");
-            if (respuesta == 0) {
-                if (dao.eliminar(b.getRut_cajero()) > 0) {
-                    JOptionPane.showMessageDialog(null, "Cajero eliminado exitosamente", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "error al eliminar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
+            cTicket = null;
+        }
+        int fPago = jComboFormaPago.getSelectedIndex() + 1;
+        String rCajero = cajero.getRut_cajero();
+        Integer nBoleta = Integer.parseInt(jTNumeroBoleta.getText());
+        if (vTotal == 0 && vTicket == 0 && SxPagar == 0) {
+            JOptionPane.showMessageDialog(null, "Debe Agregar Productos", "error!", JOptionPane.ERROR_MESSAGE);
+        } else {
+            Object[] boleta = new Object[7];
+            boleta[0] = nBoleta;
+            boleta[1] = vTotal;
+            boleta[2] = vTicket;
+            boleta[3] = SxPagar;
+            boleta[4] = cTicket;
+            boleta[5] = fPago;
+            boleta[6] = rCajero;
+            if (dao.add(boleta) > 0) {                
+                guardarDetalle();
+                JOptionPane.showMessageDialog(null, "Venta exitosa", "Exito!", JOptionPane.DEFAULT_OPTION);
+                if(cTicket!=null){
+                    dao.DeshabilitarTicket(cTicket);
                 }
+                limpiarCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo completar la operación", "error!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-     */
+
+    private void guardarDetalle() {
+        Integer nBoleta = Integer.parseInt(jTNumeroBoleta.getText());
+        for (int i = 0; i < tabla.getModel().getRowCount(); i++) {
+            Object[] o = new Object[3];
+            o[0] = tabla.getValueAt(i, 2);
+            o[1] = tabla.getValueAt(i, 0);
+            o[2] = nBoleta;
+            dao.addDetalle(o);
+        }
+    }
+    
+
     private void limpiarTabla() {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             modelo.removeRow(i);
@@ -211,9 +241,9 @@ public class AdminVenta extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 102));
+        jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
-        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel3.setBackground(new java.awt.Color(233, 154, 57));
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -269,7 +299,7 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel4.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel4.setBackground(new java.awt.Color(233, 154, 57));
 
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -311,9 +341,10 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jPanel12.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel12.setBackground(new java.awt.Color(233, 154, 57));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Ventas");
 
         jPanel13.setBackground(new java.awt.Color(204, 204, 204));
@@ -495,6 +526,8 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jPanel14.setBackground(new java.awt.Color(225, 139, 34));
+
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGENES/logoSmall.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
@@ -505,25 +538,32 @@ public class AdminVenta extends javax.swing.JDialog {
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel14Layout.createSequentialGroup()
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
         );
+
+        jPanel7.setBackground(new java.awt.Color(233, 154, 57));
 
         jLRut3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut3.setText("SUB - TOTAL $");
 
         jLSubTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLSubTotal.setForeground(new java.awt.Color(255, 255, 255));
         jLSubTotal.setText("0");
 
         jLRut5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut5.setText("DESCUENTO $");
 
         jLDescuento.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLDescuento.setForeground(new java.awt.Color(255, 255, 255));
         jLDescuento.setText("0");
 
         jLRut7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut7.setText("TOTAL $");
 
         jLTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLTotal.setForeground(new java.awt.Color(255, 255, 255));
         jLTotal.setText("0");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -559,7 +599,7 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel8.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel8.setBackground(new java.awt.Color(233, 154, 57));
 
         jLRut.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut.setText("Forma Pago");
@@ -665,11 +705,8 @@ public class AdminVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBVolverActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
-        jTBuscarTicket.setText("");
-        jLDescuento.setText("0");
-        jLSubTotal.setText("0");
-        jLTotal.setText("0");
-        limpiarTabla();        
+        limpiarCampos();
+        limpiarTabla();
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
@@ -677,7 +714,8 @@ public class AdminVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_tablaMouseClicked
 
     private void jBRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRealizarVentaActionPerformed
-        // TODO add your handling code here:
+        realizarVenta();
+        limpiarCampos();
     }//GEN-LAST:event_jBRealizarVentaActionPerformed
 
     private void jBQuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQuitarProductoActionPerformed
@@ -694,15 +732,27 @@ public class AdminVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBQuitarProductoActionPerformed
 
     private void jBCargarTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarTicketActionPerformed
-        ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));
-        jLDescuento.setText("" + ticket.getValor());
-        limpiarTabla();
-        listar();
-        calcularTotal();
+        if (!jTBuscarTicket.getText().equals("")) {
+            ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));
+            jLDescuento.setText("" + ticket.getValor());
+            if (ticket.getEstado() != 1) {
+                System.out.println("ticket no habilitado");
+                JOptionPane.showMessageDialog(null, "Ticket no Valido", "error!", JOptionPane.ERROR_MESSAGE);
+            }else{
+                limpiarTabla();
+                listar();
+                calcularTotal();
+                jTBuscarTicket.setEnabled(false);
+            }            
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe ingresar un codigo", "error!", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_jBCargarTicketActionPerformed
 
     private void jBSeleccionarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSeleccionarProductoActionPerformed
-        // TODO add your handling code here:
+        JDVent = new JDVenta(new javax.swing.JDialog(), true);        
+        cambiarModulo(JDVent);
     }//GEN-LAST:event_jBSeleccionarProductoActionPerformed
 
     public static void main(String args[]) {

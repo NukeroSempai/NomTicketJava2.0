@@ -86,21 +86,40 @@ public class VentasDAO implements CRUD {
     @Override
     public int add(Object[] o) {
         int r = 0;
-        String sql = "insert into BOLETA (num_boleta,fecha_boleta,hora_venta,valor_total,valor_ticket,saldo_por_pagar,fk_codigo_ticket_id,fk_forma_pago_id,fk_rut_cajero_id) VALUES (ISEQ$$_79660.nextval,sysdate-4/24,to_char(sysdate-4/24,'hh24:mi'),?,?,?,?,?,?)";
+        String sql = "insert into BOLETA (num_boleta,fecha_boleta,hora_venta,valor_total,valor_ticket,saldo_por_pagar,fk_codigo_ticket_id,fk_forma_pago_id,fk_rut_cajero_id) VALUES (?,sysdate-4/24,to_char(sysdate-4/24,'hh24:mi'),?,?,?,?,?,?)";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
-            //el codigo del producto es generado directamente en la base de datos por una secuencia. este dato sera omitido
-            ps.setObject(1, o[0]);//valor_total
-            ps.setObject(2, o[1]);//valor_ticket
-            ps.setObject(3, o[2]);//salgo_por_pagar
-            ps.setObject(4, o[3]);//fk_codigo_ticket //puede ser nulo
-            ps.setObject(5, o[4]);//fk_forma_pago
-            ps.setObject(6, o[5]);//fk_rut_cajero
+            //las fechas se asignan automaticamente
+            ps.setObject(1, o[0]);//numeroBoleta
+            ps.setObject(2, o[1]);//valor_total
+            ps.setObject(3, o[2]);//valor_ticket
+            ps.setObject(4, o[3]);//salgo_por_pagar
+            ps.setObject(5, o[4]);//fk_codigo_ticket //puede ser nulo
+            ps.setObject(6, o[5]);//fk_forma_pago
+            ps.setObject(7, o[6]);//fk_rut_cajero
             r = ps.executeUpdate();
             con.close();
         } catch (Exception e) {
             RegistrarError("CONTROLADOR.VentasDAO.add()", e.getMessage().toString());
+        }
+        return r;
+    }
+    
+    public int addDetalle(Object[] o) {
+        int r = 0;
+        String sql = "insert into DETALLE_BOLETA (id,cantidad,fk_codigo_producto_id,fk_num_boleta_id) values (ISEQ$$_79710.nextval,?,?,?)";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            //las fechas se asignan automaticamente
+            ps.setObject(1, o[0]);//cantidad
+            ps.setObject(2, o[1]);//fk_producto
+            ps.setObject(3, o[2]);//fk_boleta            
+            r = ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.VentasDAO.addDetalle()", e.getMessage().toString());
         }
         return r;
     }
@@ -127,6 +146,21 @@ public class VentasDAO implements CRUD {
             RegistrarError("CONTROLADOR.VentasDAO.cargarTicket(int codigo)", e.getMessage());
         }
         return t;
+    }
+    
+    public int DeshabilitarTicket(int codigo){
+        int r=0;        
+        String sql = "update ticket set estado = 0 where codigo_ticket = ?";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, codigo);            
+            r = ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.ProductosDAO.actualizar()", e.getMessage());
+        }
+        return r;        
     }
     
     public List listarPedido(int codigo){
@@ -172,6 +206,23 @@ public class VentasDAO implements CRUD {
             RegistrarError("CONTROLADOR.VentasDAO.cargarTicket(int codigo)", e.getMessage());
         }        
         return lista;
+    }
+    
+    public int GenerarIdBoleta(){
+        Integer codigoBoleta=null;
+        String sql ="select ISEQ$$_79660.nextval from dual";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                codigoBoleta = (rs.getInt(1));                
+            }            
+            con.close();                                    
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.VentasDAO.GenerarIdBoleta", e.getMessage());
+        }
+        return codigoBoleta;
     }
 
     @Override

@@ -48,6 +48,7 @@ public class JDVenta extends javax.swing.JDialog {
     }    
 
     private void inicializar() {
+        pedido = (DefaultTableModel) jTablePedido.getModel();
         limpiarTabla(modelo);
         limpiarTabla(pedido);
         listarProductos();
@@ -143,6 +144,7 @@ public class JDVenta extends javax.swing.JDialog {
         jBAgregar = new javax.swing.JButton();
         jTexPrecio = new javax.swing.JTextField();
         jLRut4 = new javax.swing.JLabel();
+        jBQuitar = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLRut7 = new javax.swing.JLabel();
         jBFiltrar = new javax.swing.JButton();
@@ -160,7 +162,7 @@ public class JDVenta extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 102));
+        jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
         jLabelModalidadEntrada.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabelModalidadEntrada.setText("Seleccionar Productos");
@@ -223,6 +225,14 @@ public class JDVenta extends javax.swing.JDialog {
         jLRut4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut4.setText("Precio");
 
+        jBQuitar.setText("Eliminar");
+        jBQuitar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBQuitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBQuitarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -235,16 +245,18 @@ public class JDVenta extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLRut4)
-                    .addComponent(jTexPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTexPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(JTCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(JTCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jBQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLRut3)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 341, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -260,7 +272,8 @@ public class JDVenta extends javax.swing.JDialog {
                     .addComponent(jTexProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(JTCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBAgregar)
-                    .addComponent(jTexPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTexPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBQuitar))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -497,23 +510,29 @@ public class JDVenta extends javax.swing.JDialog {
     }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
-        int codigo = cod_prod;
-        String nombre = jTexProducto.getText();
-        int precio = Integer.parseInt(jTexPrecio.getText());
-        int cantidad = Integer.parseInt(JTCantidad.getValue().toString());
-        int subTotal = cantidad * precio;        
-        Vector row = new Vector();
-        row.add(codigo);
-        row.add(nombre);
-        row.add(cantidad);
-        row.add(subTotal);
-        pedido.addRow(row);
-        jTablePedido.setModel(pedido);
-        //jTablePedido.setModel(pedido);
+        if(JTCantidad.getValue().toString().equals("0")){
+            JOptionPane.showMessageDialog(null, "cantidad debe ser mayor a 0", "error!", JOptionPane.ERROR_MESSAGE);
+        }else{
+            int codigo = cod_prod;
+            String nombre = jTexProducto.getText();
+            int precio = Integer.parseInt(jTexPrecio.getText());
+            int cantidad = Integer.parseInt(JTCantidad.getValue().toString());
+            int subTotal = cantidad * precio;
+            Vector row = new Vector();
+            row.add(codigo);
+            row.add(nombre);
+            row.add(cantidad);
+            row.add(subTotal);
+            pedido.addRow(row);
+            jTablePedido.setModel(pedido);
+            JTCantidad.setValue(Integer.valueOf("0"));
+        }
+        
+        
         
     }//GEN-LAST:event_jBAgregarActionPerformed
 
@@ -541,6 +560,18 @@ public class JDVenta extends javax.swing.JDialog {
     private void jBFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFinalizarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jBFinalizarActionPerformed
+
+    private void jBQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQuitarActionPerformed
+        fila = jTablePedido.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
+        } else {
+            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar producto?");
+            if (respuesta == 0) {
+                pedido.removeRow(fila);                
+            }
+        }
+    }//GEN-LAST:event_jBQuitarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -599,6 +630,7 @@ public class JDVenta extends javax.swing.JDialog {
     private javax.swing.JButton jBFiltrar;
     private javax.swing.JButton jBFiltrar1;
     private javax.swing.JButton jBFinalizar;
+    private javax.swing.JButton jBQuitar;
     private javax.swing.JComboBox<String> jComboCategoria;
     private javax.swing.JLabel jLRut1;
     private javax.swing.JLabel jLRut2;

@@ -92,10 +92,10 @@ public class Principal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 153));
+        jPanel1.setBackground(new java.awt.Color(238, 152, 45));
         jPanel1.setName("NomTicket"); // NOI18N
 
-        jPanel2.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel2.setBackground(new java.awt.Color(225, 139, 34));
 
         jLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGENES/NOMTICKET.png"))); // NOI18N
 
@@ -116,11 +116,12 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBackground(new java.awt.Color(102, 255, 204));
+        jPanel3.setBackground(new java.awt.Color(225, 139, 34));
 
-        jPanel4.setBackground(new java.awt.Color(102, 153, 255));
+        jPanel4.setBackground(new java.awt.Color(238, 152, 45));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Bienvenido");
 
         jLRut.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -153,6 +154,8 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
+        jPanel5.setBackground(new java.awt.Color(238, 152, 45));
+
         jBVentas.setText("VENTAS");
         jBVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -182,6 +185,7 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("OPCIONES");
 
         jBPerfil.setText("PERFIL");
@@ -226,7 +230,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel6.setBackground(new java.awt.Color(102, 153, 255));
+        jPanel6.setBackground(new java.awt.Color(238, 152, 45));
 
         jBCerrarSesion1.setText("CERRAR SESIÓN");
         jBCerrarSesion1.addActionListener(new java.awt.event.ActionListener() {
