@@ -35,8 +35,9 @@ public class VentasDAO implements CRUD {
     //FUNCIONES DE CONTROLADOR
     public static final int AGREGAR = 0;
     public static final int MODIFICAR = 1;
-
+    
     public static List<Object[]> CarroCompra = new ArrayList<>();
+
     //metodos personalizados
     private void RegistrarError(String modulo, String mensaje) {
         System.out.println("error packete " + modulo + " error : =  " + mensaje);
@@ -60,16 +61,16 @@ public class VentasDAO implements CRUD {
                 lista.add(p);
             }
             con.close();
-
+            
         } catch (Exception e) {
             RegistrarError("CONTROLADOR.VentasDAO.ListarFormaPago()", e.getMessage());
         }
         return lista;
     }
     
-    public String recuperarFecha(){
-        String fecha ="";
-        String sql ="select to_char(sysdate-4/24,'dd-mm-yyyy') from dual";
+    public String recuperarFecha() {
+        String fecha = "";
+        String sql = "select to_char(sysdate-4/24,'dd-mm-yyyy') from dual";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -77,7 +78,7 @@ public class VentasDAO implements CRUD {
             while (rs.next()) {                
                 fecha = (rs.getString(1));                
             }            
-            con.close();                                    
+            con.close();            
         } catch (Exception e) {
             RegistrarError("CONTROLADOR.VentasDAO.RecuperarFecha()", e.getMessage());
         }
@@ -125,10 +126,44 @@ public class VentasDAO implements CRUD {
         }
         return r;
     }
+
+    public int ActualizarSaldo(int saldo, int codigo_emp) {
+        int r = 0;
+        String sql = "update Empleado set saldo=? where codigo_emp = ?";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, saldo);
+            ps.setInt(2, codigo_emp);            
+            r = ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.VentasDAO.ActualizarSaldo(int codigo)", e.getMessage());
+        }
+        return r;
+    }
     
-    public TICKET cargarTicket(int codigo){
+    public int RecuperarSaldo(int codigo_emp) {
+        int saldo = 0;
+        String sql = "select saldo from empleado where codigo_emp = ?";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, codigo_emp);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                saldo = rs.getInt(1);                
+            }            
+            con.close();            
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.VentasDAO.RecuperarSaldo(int codigo)", e.getMessage());
+        }
+        return saldo;
+    }
+    
+    public TICKET cargarTicket(int codigo) {
         TICKET t = new TICKET();
-        String sql ="select codigo_ticket,fecha_imp,hora_vig_inicio,hora_vig_termino,estado,valor,fk_tipo_ticket_id from ticket where codigo_ticket = ?";
+        String sql = "select codigo_ticket,fecha_imp,hora_vig_inicio,hora_vig_termino,estado,valor,fk_tipo_ticket_id,fk_codigo_emp_id from ticket where codigo_ticket = ?";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -141,7 +176,8 @@ public class VentasDAO implements CRUD {
                 t.setHora_vig_termino(rs.getString("hora_vig_termino"));
                 t.setEstado(rs.getInt("estado"));
                 t.setValor(rs.getInt("valor"));
-                t.setFk_tipo_ticket(rs.getInt("fk_tipo_ticket_id"));                
+                t.setFk_tipo_ticket(rs.getInt("fk_tipo_ticket_id"));
+                t.setFk_codigo_emp(rs.getInt("fk_codigo_emp_id"));
             }
             con.close();
         } catch (Exception e) {
@@ -150,8 +186,8 @@ public class VentasDAO implements CRUD {
         return t;
     }
     
-    public int DeshabilitarTicket(int codigo){
-        int r=0;        
+    public int DeshabilitarTicket(int codigo) {
+        int r = 0;        
         String sql = "update ticket set estado = 0 where codigo_ticket = ?";
         try {
             con = cn.Conectar();
@@ -165,7 +201,7 @@ public class VentasDAO implements CRUD {
         return r;        
     }
     
-    public List listarPedido(int codigo){
+    public List listarPedido(int codigo) {
         List<Object[]> lista = new ArrayList<>();
         String sql = "select p.codigo_producto,p.nom_producto,pt.cantidad,pt.cantidad * p.precio from pedido_ticket pt join producto p on pt.fk_codigo_producto_id = p.codigo_producto where fk_num_ticket_id = ?";
         try {
@@ -178,7 +214,7 @@ public class VentasDAO implements CRUD {
                 o[0] = rs.getInt(1);
                 o[1] = rs.getString(2);
                 o[2] = rs.getInt(3);
-                o[3] = rs.getInt(4);                               
+                o[3] = rs.getInt(4);                
                 lista.add(o);                
             }
             con.close();
@@ -188,8 +224,8 @@ public class VentasDAO implements CRUD {
         return lista;
     }
     
-    public List listarPedidoDato(int codigo){
-        List <PEDIDO_TICKET> lista = new ArrayList<>();
+    public List listarPedidoDato(int codigo) {
+        List<PEDIDO_TICKET> lista = new ArrayList<>();
         String sql = "select cantidad,fk_codigo_producto_id,fk_num_ticket_id from pedido_ticket where fk_num_ticket_id = ?";
         try {
             con = cn.Conectar();
@@ -210,9 +246,9 @@ public class VentasDAO implements CRUD {
         return lista;
     }
     
-    public int GenerarIdBoleta(){
-        Integer codigoBoleta=null;
-        String sql ="select ISEQ$$_79660.nextval from dual";
+    public int GenerarIdBoleta() {
+        Integer codigoBoleta = null;
+        String sql = "select ISEQ$$_79660.nextval from dual";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -220,29 +256,29 @@ public class VentasDAO implements CRUD {
             while (rs.next()) {                
                 codigoBoleta = (rs.getInt(1));                
             }            
-            con.close();                                    
+            con.close();            
         } catch (Exception e) {
             RegistrarError("CONTROLADOR.VentasDAO.GenerarIdBoleta", e.getMessage());
         }
         return codigoBoleta;
     }
-
+    
     @Override
     public List listar() {
         //listar venta no es necesario por el momento. no se implementara el metodo momentaneamente
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public int actualizar(Object[] o) {
         //actualizar venta no es necesario por el momento. no se implementara el metodo momentaneamente
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public int eliminar(String id) {
         //eliminar venta no es necesario por el momento. no se implementara el metodo momentaneamente
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }

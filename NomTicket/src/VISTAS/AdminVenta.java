@@ -134,6 +134,13 @@ public class AdminVenta extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Venta exitosa", "Exito!", JOptionPane.DEFAULT_OPTION);
                 if (cTicket != null) {
                     dao.DeshabilitarTicket(cTicket);
+                    int saldo = dao.RecuperarSaldo(ticket.getFk_codigo_emp());
+                    System.out.println(ticket.getFk_codigo_emp());
+                    System.out.println("saldo actual = "+saldo);
+                    saldo = saldo - vTicket;
+                    System.out.println("saldo actualizado = "+saldo);
+                    
+                    dao.ActualizarSaldo(saldo, ticket.getFk_codigo_emp());                    
                 }
                 limpiarCampos();
             } else {
