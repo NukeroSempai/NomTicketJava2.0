@@ -37,8 +37,8 @@ public class AdminVenta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         inicializar();
-        //jTNumeroBoleta.setText(""+generarNumeroBoleta());
-        jTNumeroBoleta.setText("" + 0);
+        jTNumeroBoleta.setText(""+generarNumeroBoleta());
+        
     }
 
     private Integer generarNumeroBoleta() {
