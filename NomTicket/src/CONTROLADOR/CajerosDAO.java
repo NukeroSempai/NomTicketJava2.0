@@ -191,6 +191,23 @@ public class CajerosDAO implements CRUD {
         }
         return r;
     }
+    
+    public int actualizarPerfil(Object[] o) {
+        int r = 0;
+        String sql = "update CAJERO set rut_cajero=?,nombre=? where rut_cajero=?";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, o[0]);//rut
+            ps.setObject(2, o[1]);//nombre
+            ps.setObject(3, o[2]);// rut cajero a actualizar
+            r = ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.actualizarPerfil()", e.getMessage());
+        }
+        return r;
+    }
 
     //sobrecarga de metodo actualizar. esta diseñado para actualizar los datos del cajero y su contraseña. muy neceasrio para la recuperacion de cuentas 
     public int actualizar(Object[] o, String clave) {
@@ -210,6 +227,24 @@ public class CajerosDAO implements CRUD {
             con.close();
         } catch (Exception e) {            
             RegistrarError("CONTROLADOR.CajerosDAO.actualizar(Object,String clave)", e.getMessage());
+        }
+        return r;
+    }
+    
+    public int actualizarPerfil(Object[] o, String clave) {
+        int r = 0;
+        String sql = "update CAJERO set rut_cajero=?,nombre=?,clave=? where rut_cajero=?";
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setObject(1, o[0]);//rut
+            ps.setObject(2, o[1]);//nombre
+            ps.setObject(3, clave);//clave            
+            ps.setObject(4, o[2]);// rut cajero a actualizar
+            r = ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.CajerosDAO.actualizarPerfil(Object,String clave)", e.getMessage());
         }
         return r;
     }

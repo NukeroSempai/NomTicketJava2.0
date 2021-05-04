@@ -1,5 +1,6 @@
 package VISTAS;
 
+import CONTROLADOR.CajerosDAO;
 import MODELOS.CAJERO;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -12,6 +13,7 @@ import javax.swing.JOptionPane;
 public class Principal extends javax.swing.JFrame {
 
     CAJERO usuario;
+    CajerosDAO dao = new CajerosDAO();
 
     public Principal() {
         initComponents();
@@ -46,8 +48,7 @@ public class Principal extends javax.swing.JFrame {
         jBInformes.setVisible(estado);
     }
 
-    private void dibujarInterfaz() {
-        
+    private void dibujarInterfaz() {        
         jLRut.setText(usuario.getRut_cajero());
         jLNombre.setText(usuario.getNombre());
         this.setEnabled(true);
@@ -91,6 +92,13 @@ public class Principal extends javax.swing.JFrame {
         jBSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(238, 152, 45));
         jPanel1.setName("NomTicket"); // NOI18N
@@ -360,8 +368,16 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBInformesActionPerformed
 
     private void jBPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPerfilActionPerformed
-        // TODO add your handling code here:
+        JDPerfil jPerfil = new JDPerfil(new javax.swing.JDialog(),true);
+        jPerfil.setCajero(usuario);
+        cambiarModulo(jPerfil);
     }//GEN-LAST:event_jBPerfilActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        this.usuario = dao.BuscarCajero(jLRut.getText());
+        jLRut.setText(usuario.getRut_cajero());
+        jLNombre.setText(usuario.getNombre());
+    }//GEN-LAST:event_formWindowGainedFocus
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
