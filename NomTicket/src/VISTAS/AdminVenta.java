@@ -39,8 +39,13 @@ public class AdminVenta extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         inicializar();
-        jTNumeroBoleta.setText(""+generarNumeroBoleta());
+        jTNumeroBoleta.setText("" + generarNumeroBoleta());
         //jTNumeroBoleta.setText("0");    <----------- comando para hacer pruebas. (borrar boleta 0 previamente antes de ejecutar)
+    }
+
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
     }
 
     private Integer generarNumeroBoleta() {
@@ -92,7 +97,7 @@ public class AdminVenta extends javax.swing.JDialog {
     }
 
     private void limpiarCampos() {
-        jTNumeroBoleta.setText(""+generarNumeroBoleta());
+        jTNumeroBoleta.setText("" + generarNumeroBoleta());
         jTBuscarTicket.setText("");
         jTBuscarTicket.setEnabled(true);
         jTFecha.setText(dao.recuperarFecha());
@@ -136,11 +141,11 @@ public class AdminVenta extends javax.swing.JDialog {
                     dao.DeshabilitarTicket(cTicket);
                     int saldo = dao.RecuperarSaldo(ticket.getFk_codigo_emp());
                     System.out.println(ticket.getFk_codigo_emp());
-                    System.out.println("saldo actual = "+saldo);
+                    System.out.println("saldo actual = " + saldo);
                     saldo = saldo - vTicket;
-                    System.out.println("saldo actualizado = "+saldo);
-                    
-                    dao.ActualizarSaldo(saldo, ticket.getFk_codigo_emp());                    
+                    System.out.println("saldo actualizado = " + saldo);
+
+                    dao.ActualizarSaldo(saldo, ticket.getFk_codigo_emp());
                 }
                 limpiarCampos();
             } else {
@@ -248,6 +253,8 @@ public class AdminVenta extends javax.swing.JDialog {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setUndecorated(true);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -406,6 +413,12 @@ public class AdminVenta extends javax.swing.JDialog {
         jLRut9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut9.setText("Ticket N°");
 
+        jTBuscarTicket.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTBuscarTicketKeyTyped(evt);
+            }
+        });
+
         jBCargarTicket.setText("CARGAR");
         jBCargarTicket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -421,8 +434,8 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTBuscarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addComponent(jTBuscarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addComponent(jBCargarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -488,8 +501,8 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut10)
                 .addGap(18, 18, 18)
-                .addComponent(jBSeleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addComponent(jBSeleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
                 .addComponent(jBQuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -497,11 +510,14 @@ public class AdminVenta extends javax.swing.JDialog {
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLRut10)
-                    .addComponent(jBSeleccionarProducto)
-                    .addComponent(jBQuitarProducto))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jBQuitarProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel16Layout.createSequentialGroup()
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLRut10)
+                            .addComponent(jBSeleccionarProducto))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
@@ -514,7 +530,7 @@ public class AdminVenta extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -748,12 +764,13 @@ public class AdminVenta extends javax.swing.JDialog {
 
     private void jBCargarTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarTicketActionPerformed
         if (!jTBuscarTicket.getText().equals("")) {
-            ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));
-            jLDescuento.setText("" + ticket.getValor());
+            ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));            
             if (ticket.getEstado() != 1) {
                 System.out.println("ticket no habilitado");
                 JOptionPane.showMessageDialog(null, "Ticket no Valido", "error!", JOptionPane.ERROR_MESSAGE);
+                jLDescuento.setText("0");
             } else {
+                jLDescuento.setText("" + ticket.getValor());
                 if (tabla.getRowCount() > 0) {
                     int respuesta = JOptionPane.showConfirmDialog(null, "Mantener pedido de productos?");
                     if (respuesta == 0) {
@@ -799,6 +816,11 @@ public class AdminVenta extends javax.swing.JDialog {
         VentasDAO.CarroCompra.clear();
         calcularTotal();
     }//GEN-LAST:event_formWindowGainedFocus
+
+    private void jTBuscarTicketKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTBuscarTicketKeyTyped
+        // TODO add your handling code here:
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_jTBuscarTicketKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

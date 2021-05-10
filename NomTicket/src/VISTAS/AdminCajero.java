@@ -29,11 +29,18 @@ public class AdminCajero extends javax.swing.JDialog {
     private int fila;
 
     JDCajero JDcaj;
+    
+    
 
     public AdminCajero(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
         inicializar();
+    }
+    
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
     }
 
     private void inicializar() {
@@ -185,6 +192,9 @@ public class AdminCajero extends javax.swing.JDialog {
         jButton13.setText("jButton13");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setIconImages(getIconImages());
+        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -313,6 +323,12 @@ public class AdminCajero extends javax.swing.JDialog {
         jBBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBBuscarActionPerformed(evt);
+            }
+        });
+
+        jTtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTtBuscarKeyTyped(evt);
             }
         });
 
@@ -600,6 +616,11 @@ public class AdminCajero extends javax.swing.JDialog {
         limpiarTabla();
         listar();
     }//GEN-LAST:event_formWindowActivated
+
+    private void jTtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTtBuscarKeyTyped
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTtBuscarKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

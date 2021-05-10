@@ -35,6 +35,11 @@ public class JDCajero extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
+    
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
+    }
 
     public void setModalidad(int modalidad) {
         this.MODALIDAD = modalidad;
@@ -170,6 +175,8 @@ public class JDCajero extends javax.swing.JDialog {
         jBCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
@@ -182,6 +189,12 @@ public class JDCajero extends javax.swing.JDialog {
 
         jLRut2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut2.setText("Nombre");
+
+        jTextNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextNombreKeyTyped(evt);
+            }
+        });
 
         jLRut3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut3.setText("Sucursal");
@@ -377,6 +390,11 @@ public class JDCajero extends javax.swing.JDialog {
             jTextClave.setText("");
         }
     }//GEN-LAST:event_jCheckClaveActionPerformed
+
+    private void jTextNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextNombreKeyTyped
+        // TODO add your handling code here:
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_jTextNombreKeyTyped
 
     /**
      * @param args the command line arguments

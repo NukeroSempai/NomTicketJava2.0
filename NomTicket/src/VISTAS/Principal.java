@@ -2,6 +2,8 @@ package VISTAS;
 
 import CONTROLADOR.CajerosDAO;
 import MODELOS.CAJERO;
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
@@ -18,6 +20,11 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         inicializar();
+    }
+    
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
     }
 
     private void inicializar() {
@@ -92,6 +99,8 @@ public class Principal extends javax.swing.JFrame {
         jBSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(getIconImage());
+        setUndecorated(true);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
@@ -336,7 +345,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
         String botones[] = {"Si", "No"};
-        int eleccion = JOptionPane.showOptionDialog(this, "Desea cerrar la aplicación", "Aviso", 0, 0, null, botones, this);
+        int eleccion = JOptionPane.showOptionDialog(this, "Desea cerrar la aplicación?", "Aviso", 0, 0, null, botones, this);
         if (eleccion == JOptionPane.YES_OPTION) {
             System.exit(0);
         }

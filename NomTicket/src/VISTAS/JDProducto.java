@@ -31,6 +31,11 @@ public class JDProducto extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
+    
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
+    }
 
     public void setModalidad(int modalidad) {
         this.MODALIDAD = modalidad;
@@ -127,6 +132,8 @@ public class JDProducto extends javax.swing.JDialog {
         jBCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(getIconImage());
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
@@ -137,11 +144,29 @@ public class JDProducto extends javax.swing.JDialog {
         jLRut1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut1.setText("Nombre Producto");
 
+        jTextNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextNombreKeyTyped(evt);
+            }
+        });
+
         jLRut2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut2.setText("Descripción");
 
+        jTextDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextDescripcionKeyTyped(evt);
+            }
+        });
+
         jLRut3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut3.setText("Categoria");
+
+        jTextPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextPrecioKeyTyped(evt);
+            }
+        });
 
         jLRut4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut4.setText("Precio");
@@ -281,6 +306,21 @@ public class JDProducto extends javax.swing.JDialog {
             this.dispose();
         }
     }//GEN-LAST:event_jBConfirmarActionPerformed
+
+    private void jTextNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextNombreKeyTyped
+        // TODO add your handling code here:
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_jTextNombreKeyTyped
+
+    private void jTextDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextDescripcionKeyTyped
+        // TODO add your handling code here:
+        event.textKeyPress(evt);
+    }//GEN-LAST:event_jTextDescripcionKeyTyped
+
+    private void jTextPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPrecioKeyTyped
+        // TODO add your handling code here:
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_jTextPrecioKeyTyped
 
     /**
      * @param args the command line arguments

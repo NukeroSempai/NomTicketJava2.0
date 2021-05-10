@@ -25,6 +25,11 @@ public class InicioSesion extends javax.swing.JDialog {
         Inicializar();
     }
     
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
+        return retValue;
+    }
+    
     private void Inicializar(){
         this.setLocationRelativeTo(this);
         this.setResizable(false);        
@@ -51,6 +56,8 @@ public class InicioSesion extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(225, 139, 34));
+        setIconImage(getIconImage());
+        setUndecorated(true);
 
         jPanel2.setBackground(new java.awt.Color(225, 139, 34));
 
