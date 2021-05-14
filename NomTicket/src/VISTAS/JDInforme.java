@@ -18,23 +18,18 @@ import CONTROLADOR.ProductosDAO;
  * Formulario creado para guardar y actualizar datos
  *
  */
-public class JDProducto extends javax.swing.JDialog {
+public class JDInforme extends javax.swing.JDialog {
 
     private int MODALIDAD;
 
     private ProductosDAO dao = new ProductosDAO();
     private PRODUCTO p = new PRODUCTO();
     private List<String> tipoProd = dao.listarTipo();
-    private EVENTOS event = new EVENTOS();
+    private EVENTOS event = new EVENTOS();    
 
-    public JDProducto(javax.swing.JDialog parent, boolean modal) {
+    public JDInforme(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-    }
-
-    public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
-        return retValue;
     }
 
     public void setModalidad(int modalidad) {
@@ -46,11 +41,10 @@ public class JDProducto extends javax.swing.JDialog {
         this.p = producto;
         cargarProducto();
     }
-
-    private void cargarProducto() {
+    private void cargarProducto(){
         jTextNombre.setText(p.getNombre());
         jTextDescripcion.setText(p.getDescripcion());
-        jTextPrecio.setText("" + p.getPrecio());
+        jTextPrecio.setText(""+p.getPrecio());
         jComboCategoria.setSelectedIndex(p.getFk_tipo_producto());
     }
 
@@ -84,13 +78,13 @@ public class JDProducto extends javax.swing.JDialog {
         System.out.println(ob[0]);
         System.out.println(ob[1]);
         System.out.println(ob[2]);
-        System.out.println(ob[3]);
+        System.out.println(ob[3]);        
         if (dao.add(ob) > 0) {
             JOptionPane.showMessageDialog(null, "Producto Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "error al agregar producto", "error!", JOptionPane.ERROR_MESSAGE);
         }
-
+        
     }
 
     private void Actualizar() {
@@ -111,8 +105,8 @@ public class JDProducto extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "error al Actualizar producto", "error!", JOptionPane.ERROR_MESSAGE);
         }
 
-    }
-
+    }    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -133,8 +127,6 @@ public class JDProducto extends javax.swing.JDialog {
         jBCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(getIconImage());
-        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
@@ -145,29 +137,11 @@ public class JDProducto extends javax.swing.JDialog {
         jLRut1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut1.setText("Nombre Producto");
 
-        jTextNombre.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextNombreKeyTyped(evt);
-            }
-        });
-
         jLRut2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut2.setText("Descripción");
 
-        jTextDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextDescripcionKeyTyped(evt);
-            }
-        });
-
         jLRut3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut3.setText("Categoria");
-
-        jTextPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextPrecioKeyTyped(evt);
-            }
-        });
 
         jLRut4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut4.setText("Precio");
@@ -298,46 +272,15 @@ public class JDProducto extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        if (Integer.parseInt(jTextPrecio.getText()) == 0) {
-            int respuesta = JOptionPane.showConfirmDialog(null, "El precio del producto es 0, Esto es correcto?");
-            if (respuesta == 0) {
-                if (MODALIDAD == 0) {
-                    Agregar();
-                    this.dispose();
-                }
-                if (MODALIDAD == 1) {
-                    Actualizar();
-                    this.dispose();
-                }
-            } else {
-                jTextPrecio.requestFocus();
-            }            
-        }else{
-            if (MODALIDAD == 0) {
-                Agregar();
-                this.dispose();
-            }
-            if (MODALIDAD == 1) {
-                Actualizar();
-                this.dispose();
-            }
+        if (MODALIDAD == 0) {
+            Agregar();
+            this.dispose();
+        }
+        if (MODALIDAD == 1) {
+            Actualizar();
+            this.dispose();
         }
     }//GEN-LAST:event_jBConfirmarActionPerformed
-
-    private void jTextNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextNombreKeyTyped
-        // TODO add your handling code here:
-        event.textKeyPress(evt);
-    }//GEN-LAST:event_jTextNombreKeyTyped
-
-    private void jTextDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextDescripcionKeyTyped
-        // TODO add your handling code here:
-        event.textKeyPress(evt);
-    }//GEN-LAST:event_jTextDescripcionKeyTyped
-
-    private void jTextPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPrecioKeyTyped
-        // TODO add your handling code here:
-        event.numberKeyPress(evt);
-    }//GEN-LAST:event_jTextPrecioKeyTyped
 
     /**
      * @param args the command line arguments
@@ -356,21 +299,23 @@ public class JDProducto extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDInforme.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDInforme.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDInforme.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JDInforme.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDProducto dialog = new JDProducto(new javax.swing.JDialog(), true);
+                JDInforme dialog = new JDInforme(new javax.swing.JDialog(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -31,7 +31,7 @@ public class JDPerfil extends javax.swing.JDialog {
     public JDPerfil(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextClave.setEnabled(false);
+        jTextClave1.setEnabled(false);
     }
     
     public Image getIconImage() {
@@ -50,7 +50,7 @@ public class JDPerfil extends javax.swing.JDialog {
     }
 
     private void Actualizar() {
-        jTextClave.setEnabled(false);
+        jTextClave1.setEnabled(false);
         String rut_caj = jTextRut.getText();
         String nombre_caj = jTextNombre.getText();
         Object[] obj = new Object[3];
@@ -66,7 +66,7 @@ public class JDPerfil extends javax.swing.JDialog {
     }
 
     private void Actualizar(String clave) {
-        jTextClave.setEnabled(false);
+        jTextClave1.setEnabled(false);
         String rut_caj = jTextRut.getText();
         String nombre_caj = jTextNombre.getText();
         clave = seg.encriptar(clave);
@@ -95,7 +95,9 @@ public class JDPerfil extends javax.swing.JDialog {
         jTextNombre = new javax.swing.JTextField();
         jLRut4 = new javax.swing.JLabel();
         jCheckClave = new javax.swing.JCheckBox();
-        jTextClave = new javax.swing.JPasswordField();
+        jTextClave1 = new javax.swing.JPasswordField();
+        jTextClave2 = new javax.swing.JPasswordField();
+        jLRut5 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jBConfirmar = new javax.swing.JButton();
         jBCancelar = new javax.swing.JButton();
@@ -131,6 +133,9 @@ public class JDPerfil extends javax.swing.JDialog {
             }
         });
 
+        jLRut5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLRut5.setText("Repetir Clave");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -138,7 +143,8 @@ public class JDPerfil extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextClave)
+                    .addComponent(jTextClave1)
+                    .addComponent(jTextClave2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -149,7 +155,8 @@ public class JDPerfil extends javax.swing.JDialog {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLRut4)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckClave)))
+                                .addComponent(jCheckClave))
+                            .addComponent(jLRut5))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -169,7 +176,11 @@ public class JDPerfil extends javax.swing.JDialog {
                     .addComponent(jLRut4)
                     .addComponent(jCheckClave))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextClave1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLRut5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextClave2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -259,26 +270,37 @@ public class JDPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        if (jTextClave.getPassword().length != 0) {
-            String clave = "";
-            for (int i = 0; i < jTextClave.getPassword().length; i++) {
-                clave += jTextClave.getPassword()[i];
+        if (jTextClave1.getPassword().length != 0 && jTextClave2.getPassword().length!=0) {
+            String clave1 = "";
+            for (int i = 0; i < jTextClave1.getPassword().length; i++) {
+                clave1 += jTextClave1.getPassword()[i];
             }
-            Actualizar(clave);
+            String clave2 ="";
+            for (int i = 0; i < jTextClave2.getPassword().length; i++) {
+                clave1 += jTextClave2.getPassword()[i];
+            }
+            if(clave1.equals(clave2)){
+                Actualizar(clave1);
+            }else{
+                JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "error!", JOptionPane.ERROR_MESSAGE);
+            }            
         } else {
             Actualizar();
         }
         this.dispose();
-
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
     private void jCheckClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckClaveActionPerformed
         if (jCheckClave.isSelected()) {
-            jTextClave.setEnabled(true);
-            jTextClave.setText("");
+            jTextClave1.setEnabled(true);
+            jTextClave1.setText("");
+            jTextClave2.setEnabled(true);
+            jTextClave2.setText("");
         } else {
-            jTextClave.setEnabled(false);
-            jTextClave.setText("");
+            jTextClave1.setEnabled(false);
+            jTextClave1.setText("");
+            jTextClave2.setEnabled(false);
+            jTextClave2.setText("");
         }
     }//GEN-LAST:event_jCheckClaveActionPerformed
 
@@ -343,11 +365,13 @@ public class JDPerfil extends javax.swing.JDialog {
     private javax.swing.JLabel jLRut1;
     private javax.swing.JLabel jLRut2;
     private javax.swing.JLabel jLRut4;
+    private javax.swing.JLabel jLRut5;
     private javax.swing.JLabel jLabelModalidadEntrada;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jTextClave;
+    private javax.swing.JPasswordField jTextClave1;
+    private javax.swing.JPasswordField jTextClave2;
     private javax.swing.JTextField jTextNombre;
     private javax.swing.JTextField jTextRut;
     // End of variables declaration//GEN-END:variables

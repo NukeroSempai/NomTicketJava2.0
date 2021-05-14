@@ -16,7 +16,7 @@ import javax.swing.JDialog;
  * @author Nukero
  * @version 1.0
  */
-public class AdminProductos extends javax.swing.JDialog {
+public class AdminInformes extends javax.swing.JDialog {
 
     private ProductosDAO dao = new ProductosDAO();
     private PRODUCTO p = new PRODUCTO();
@@ -28,15 +28,10 @@ public class AdminProductos extends javax.swing.JDialog {
     
     JDProducto JDProd;
 
-    public AdminProductos(javax.swing.JDialog parent, boolean modal) {
+    public AdminInformes(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
         inicializar();
-    }
-    
-    public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
-        return retValue;
     }
     
     private void inicializar(){
@@ -162,8 +157,6 @@ public class AdminProductos extends javax.swing.JDialog {
         jButton13.setText("jButton13");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(getIconImage());
-        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -245,7 +238,7 @@ public class AdminProductos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Descripción", "Tipo", "Precio"
+                "Codigo", "Nombre", "Descripción", "Precio", "Tipo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -292,12 +285,6 @@ public class AdminProductos extends javax.swing.JDialog {
         jBBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBBuscarActionPerformed(evt);
-            }
-        });
-
-        jTtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTtBuscarKeyTyped(evt);
             }
         });
 
@@ -575,11 +562,6 @@ public class AdminProductos extends javax.swing.JDialog {
         listar();
     }//GEN-LAST:event_formWindowActivated
 
-    private void jTtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTtBuscarKeyTyped
-        // TODO add your handling code here:
-        event.numberKeyPress(evt);
-    }//GEN-LAST:event_jTtBuscarKeyTyped
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -594,20 +576,21 @@ public class AdminProductos extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminInformes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminInformes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminInformes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdminProductos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminInformes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                AdminProductos dialog = new AdminProductos(new javax.swing.JDialog(), true);
+                AdminInformes dialog = new AdminInformes(new javax.swing.JDialog(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
