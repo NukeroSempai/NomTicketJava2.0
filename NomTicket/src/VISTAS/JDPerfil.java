@@ -32,6 +32,7 @@ public class JDPerfil extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         jTextClave1.setEnabled(false);
+        jTextClave2.setEnabled(false);
     }
     
     public Image getIconImage() {
