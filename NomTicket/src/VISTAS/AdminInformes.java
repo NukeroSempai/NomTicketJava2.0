@@ -1,5 +1,6 @@
 package VISTAS;
 
+import CONTROLADOR.InformesDAO;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -9,7 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
 import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
+import MODELOS.INFORME_TICKET;
+import java.sql.Date;
 import javax.swing.JDialog;
+import javax.swing.JTextField;
 
 /**
  *
@@ -18,81 +22,111 @@ import javax.swing.JDialog;
  */
 public class AdminInformes extends javax.swing.JDialog {
 
-    private ProductosDAO dao = new ProductosDAO();
-    private PRODUCTO p = new PRODUCTO();
-    private List<String> tipoProd = dao.listarTipo();
+    private InformesDAO dao = new InformesDAO();
+    private INFORME_TICKET f = new INFORME_TICKET();    
     private EVENTOS event = new EVENTOS();
 
     private DefaultTableModel modelo = new DefaultTableModel();
     private int fila;
-    
-    JDProducto JDProd;
+
+    JDInforme JDInfo;
 
     public AdminInformes(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
         inicializar();
     }
-    
-    private void inicializar(){        
+
+    private void inicializar() {
         limpiarTabla();
         listar();
+        jDTFiltrar.setDateFormatString("yyyy-MM-dd");
     }
-    
-    
-    private void listar(){
-        List<PRODUCTO> lista = dao.listar();
+
+    private void listar() {
+        List<INFORME_TICKET> lista = dao.listar();
 
         modelo = (DefaultTableModel) tabla.getModel();
-        Object[] ob = new Object[5];
+        Object[] ob = new Object[8];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getCodigo_producto();
-            ob[1] = lista.get(i).getNombre();
-            ob[2] = lista.get(i).getDescripcion();            
-            ob[3] = tipoProd.get(lista.get(i).getFk_tipo_producto()-1);
-            ob[4] = lista.get(i).getPrecio();
+            ob[0] = lista.get(i).getCorrelativo_inf();
+            ob[1] = lista.get(i).getFecha_informe();
+            ob[2] = lista.get(i).getRango_inicio();
+            ob[3] = lista.get(i).getRango_termino();
+            ob[4] = lista.get(i).getCant_boletas();
+            ob[5] = lista.get(i).getCant_tickets();
+            ob[6] = lista.get(i).getTotal_ventas();
+            ob[7] = lista.get(i).getTipo_informe();
             modelo.addRow(ob);
         }
         tabla.setModel(modelo);
+        //ocultar columnas
+        tabla.getColumn("Rango Inicio").setMinWidth(0);
+        tabla.getColumn("Rango Inicio").setMaxWidth(0);
+        tabla.getColumn("Rango Inicio").setWidth(0);
+
+        tabla.getColumn("Rango Termino").setMinWidth(0);
+        tabla.getColumn("Rango Termino").setMaxWidth(0);
+        tabla.getColumn("Rango Termino").setWidth(0);
+
+        tabla.getColumn("Boletas").setMinWidth(0);
+        tabla.getColumn("Boletas").setMaxWidth(0);
+        tabla.getColumn("Boletas").setWidth(0);
+
+        tabla.getColumn("Tickets").setMinWidth(0);
+        tabla.getColumn("Tickets").setMaxWidth(0);
+        tabla.getColumn("Tickets").setWidth(0);
+
+        tabla.getColumn("Total Ventas").setMinWidth(0);
+        tabla.getColumn("Total Ventas").setMaxWidth(0);
+        tabla.getColumn("Total Ventas").setWidth(0);
+
     }
+
     //sobrecarga de metodo
-    private void listar(int categoria){
-        List<PRODUCTO> lista = dao.listar(categoria);
+    private void listar(Date fecha) {
+        List<INFORME_TICKET> lista = dao.listar(fecha);
 
         modelo = (DefaultTableModel) tabla.getModel();
-        Object[] ob = new Object[5];
+        Object[] ob = new Object[8];
         for (int i = 0; i < lista.size(); i++) {
-            ob[0] = lista.get(i).getCodigo_producto();
-            ob[1] = lista.get(i).getNombre();
-            ob[2] = lista.get(i).getDescripcion();            
-            ob[3] = tipoProd.get(lista.get(i).getFk_tipo_producto()-1);
-            ob[4] = lista.get(i).getPrecio();
+            ob[0] = lista.get(i).getCorrelativo_inf();
+            ob[1] = lista.get(i).getFecha_informe();
+            ob[2] = lista.get(i).getRango_inicio();
+            ob[3] = lista.get(i).getRango_termino();
+            ob[4] = lista.get(i).getCant_boletas();
+            ob[5] = lista.get(i).getCant_tickets();
+            ob[6] = lista.get(i).getTotal_ventas();
+            ob[7] = lista.get(i).getTipo_informe();
             modelo.addRow(ob);
         }
         tabla.setModel(modelo);
     }
-    
-    private void buscar(){
-        p=dao.listarCodigo(Integer.parseInt(jTtBuscar.getText()));
+
+    private void buscar() {
+        f = dao.listarCodigo(Integer.parseInt(jTtBuscar.getText()));
         modelo = (DefaultTableModel) tabla.getModel();
-        Object[] ob = new Object[5];
-        ob[0] = p.getCodigo_producto();
-        ob[1] = p.getNombre();
-        ob[2] = p.getDescripcion();
-        ob[3] = tipoProd.get(p.getFk_tipo_producto()-1);
-        ob[4] = p.getPrecio();
+        Object[] ob = new Object[8];        
+        ob[0] = f.getCorrelativo_inf();
+        ob[1] = f.getFecha_informe();
+        ob[2] = f.getRango_inicio();
+        ob[3] = f.getRango_termino();
+        ob[4] = f.getCant_boletas();
+        ob[5] = f.getCant_tickets();
+        ob[6] = f.getTotal_ventas();
+        ob[7] = f.getTipo_informe();
         modelo.addRow(ob);
         tabla.setModel(modelo);
     }
-    
-    private void limpiarTabla(){
+
+    private void limpiarTabla() {
         for (int i = 0; i < modelo.getRowCount(); i++) {
             modelo.removeRow(i);
             i = i - 1;
         }
     }
-    
-    private void cambiarModulo(JDialog dialogo){
+
+    private void cambiarModulo(JDialog dialogo) {
         this.setEnabled(false);
         this.setVisible(false);
         dialogo.setLocationRelativeTo(this);
@@ -206,11 +240,11 @@ public class AdminInformes extends javax.swing.JDialog {
 
             },
             new String [] {
-                "correlativo", "tipo informe", "fecha informe"
+                "correlativo", "fecha informe", "Rango Inicio", "Rango Termino", "Boletas", "Tickets", "Total Ventas", "Tipo Informe"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -459,9 +493,9 @@ public class AdminInformes extends javax.swing.JDialog {
     }//GEN-LAST:event_jBVolverActionPerformed
 
     private void jBGenerarInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGenerarInformeActionPerformed
-        JDProd = new JDProducto(new javax.swing.JDialog(), true);
-        JDProd.setModalidad(ProductosDAO.AGREGAR);
-        cambiarModulo(JDProd);
+        JDInfo = new JDInforme(new javax.swing.JDialog(), true);
+        JDInfo.setModalidad(InformesDAO.AGREGAR);
+        cambiarModulo(JDInfo);
         limpiarTabla();
         listar();
     }//GEN-LAST:event_jBGenerarInformeActionPerformed
@@ -470,18 +504,22 @@ public class AdminInformes extends javax.swing.JDialog {
         fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
-        }else{
-            JDProd = new JDProducto(new javax.swing.JDialog(), true);
-            JDProd.setModalidad(ProductosDAO.MODIFICAR);
-            JDProd.setProducto(p);
-            cambiarModulo(JDProd);
+        } else {
+            JDInfo = new JDInforme(new javax.swing.JDialog(), true);
+            JDInfo.setModalidad(InformesDAO.ABRIR);
+            JDInfo.setProducto(f);
+            cambiarModulo(JDInfo);
             limpiarTabla();
             listar();
-        }        
+        }
     }//GEN-LAST:event_jBAbrirInformeActionPerformed
 
     private void jBFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFiltrarActionPerformed
-        limpiarTabla();        
+        limpiarTabla();
+        String fecha = ((JTextField) jDTFiltrar.getDateEditor().getUiComponent()).getText();
+        System.out.println(fecha);        
+        listar(new java.sql.Date(jDTFiltrar.getDate().getTime()));        
+        
     }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
@@ -494,17 +532,19 @@ public class AdminInformes extends javax.swing.JDialog {
         fila = tabla.getSelectedRow();
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
-        } else {            
-            String codigo = tabla.getValueAt(fila, 0).toString(); 
+        } else {
+            String codigo = tabla.getValueAt(fila, 0).toString();
             String nombre = tabla.getValueAt(fila, 1).toString();
-            String descripcion = tabla.getValueAt(fila, 2).toString(); 
+            String descripcion = tabla.getValueAt(fila, 2).toString();
             String tipoProducto = tabla.getValueAt(fila, 3).toString();
-            String precio = tabla.getValueAt(fila, 4).toString();            
-            p.setCodigo_producto(Integer.parseInt(codigo));
-            p.setNombre(nombre);
-            p.setDescripcion(descripcion);
-            p.setFk_tipo_producto(tipoProd.indexOf(tipoProducto));
-            p.setPrecio(Integer.parseInt(precio));
+            String precio = tabla.getValueAt(fila, 4).toString();
+            /*
+            f.setCodigo_producto(Integer.parseInt(codigo));
+            f.setNombre(nombre);
+            f.setDescripcion(descripcion);
+            f.setFk_tipo_producto(tipoProd.indexOf(tipoProducto));
+            f.setPrecio(Integer.parseInt(precio));
+            */
         }
     }//GEN-LAST:event_tablaMouseClicked
 

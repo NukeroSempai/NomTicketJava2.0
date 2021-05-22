@@ -161,12 +161,12 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jDateChooser1" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                              <Component id="jDRangoInicio" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
                               <Component id="jLRut6" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jDateChooser2" min="-2" pref="160" max="-2" attributes="0"/>
+                              <Component id="jDRangoTermino" min="-2" pref="160" max="-2" attributes="0"/>
                               <Component id="jLRut7" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -183,8 +183,8 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="jDateChooser1" min="-2" max="-2" attributes="0"/>
-                              <Component id="jDateChooser2" min="-2" max="-2" attributes="0"/>
+                              <Component id="jDRangoInicio" min="-2" max="-2" attributes="0"/>
+                              <Component id="jDRangoTermino" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -200,7 +200,7 @@
                     <Property name="text" type="java.lang.String" value="RANGO DE INICIO"/>
                   </Properties>
                 </Component>
-                <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
+                <Component class="com.toedter.calendar.JDateChooser" name="jDRangoInicio">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLRut7">
                   <Properties>
@@ -210,7 +210,7 @@
                     <Property name="text" type="java.lang.String" value="RANGO DE TERMINO"/>
                   </Properties>
                 </Component>
-                <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser2">
+                <Component class="com.toedter.calendar.JDateChooser" name="jDRangoTermino">
                 </Component>
               </SubComponents>
             </Container>

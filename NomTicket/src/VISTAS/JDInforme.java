@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
 import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
+import MODELOS.INFORME_TICKET;
 import java.awt.BorderLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -29,7 +30,7 @@ public class JDInforme extends javax.swing.JDialog {
     private int MODALIDAD;
 
     private ProductosDAO dao = new ProductosDAO();
-    private PRODUCTO p = new PRODUCTO();
+    private INFORME_TICKET p = new INFORME_TICKET();
     private List<String> tipoProd = dao.listarTipo();
     private EVENTOS event = new EVENTOS(); 
     private DefaultTableModel modelo = new DefaultTableModel();
@@ -44,8 +45,8 @@ public class JDInforme extends javax.swing.JDialog {
         inicializar();
     }
 
-    public void setProducto(PRODUCTO producto) {
-        this.p = producto;        
+    public void setProducto(INFORME_TICKET informe) {
+        this.p = informe;        
     }
 
     private void inicializar() {
@@ -146,9 +147,9 @@ public class JDInforme extends javax.swing.JDialog {
         jLRut4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLRut6 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDRangoInicio = new com.toedter.calendar.JDateChooser();
         jLRut7 = new javax.swing.JLabel();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jDRangoTermino = new com.toedter.calendar.JDateChooser();
         jLRut8 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLRut9 = new javax.swing.JLabel();
@@ -191,11 +192,11 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDRangoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLRut6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDRangoTermino, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLRut7))
                 .addContainerGap())
         );
@@ -208,8 +209,8 @@ public class JDInforme extends javax.swing.JDialog {
                     .addComponent(jLRut7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDRangoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDRangoTermino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -493,6 +494,7 @@ public class JDInforme extends javax.swing.JDialog {
         limpiarTabla(modelo);
         cargarTabla();
         
+        
         /*
         if (MODALIDAD == 0) {
             Agregar();
@@ -506,8 +508,7 @@ public class JDInforme extends javax.swing.JDialog {
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
     private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
-        System.out.println("modo de prueba");
-        repaint();
+        this.dispose();
     }//GEN-LAST:event_jBCancelar1ActionPerformed
 
     /**
@@ -560,8 +561,8 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JTable Tabla;
     private javax.swing.JButton jBCancelar1;
     private javax.swing.JButton jBConfirmar;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private com.toedter.calendar.JDateChooser jDRangoInicio;
+    private com.toedter.calendar.JDateChooser jDRangoTermino;
     private javax.swing.JLabel jLRut10;
     private javax.swing.JLabel jLRut11;
     private javax.swing.JLabel jLRut4;
