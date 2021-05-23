@@ -1,5 +1,6 @@
 package VISTAS;
 
+import CONTROLADOR.InformesDAO;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
@@ -11,6 +12,10 @@ import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
 import MODELOS.INFORME_TICKET;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -29,15 +34,17 @@ public class JDInforme extends javax.swing.JDialog {
 
     private int MODALIDAD;
 
-    private ProductosDAO dao = new ProductosDAO();
-    private INFORME_TICKET p = new INFORME_TICKET();
-    private List<String> tipoProd = dao.listarTipo();
+    private InformesDAO dao = new InformesDAO();
+    private INFORME_TICKET p = new INFORME_TICKET();    
     private EVENTOS event = new EVENTOS(); 
     private DefaultTableModel modelo = new DefaultTableModel();
 
     public JDInforme(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTCantidadBoletas.setEnabled(false);
+        jTCantidadTickets.setEnabled(false);
+        jTTotalVentas.setEnabled(false);
     }
 
     public void setModalidad(int modalidad) {
@@ -50,14 +57,38 @@ public class JDInforme extends javax.swing.JDialog {
     }
 
     private void inicializar() {
-        cargarTabla();
+        if(MODALIDAD==0){//modo agregar informe            
+            jLabelTituloInforme1.setText("Generar Informe");
+            jBConfirmar.setText("Guardar Informe");
+        }else{//modo abrir informe
+            //configuracion de formulario
+            jLabelTituloInforme1.setText("Informe N° "+p.getCorrelativo_inf());
+            jPanelBTNConfirmar.setBackground(new Color(225,139,34));
+            jBConfirmar.setVisible(false);
+            jBConfirmar.setEnabled(false);
+            //carga de datos
+            jTCantidadBoletas.setText(""+p.getCant_boletas());
+            jTCantidadTickets.setText(""+p.getCant_tickets());
+            jTTotalVentas.setText(""+p.getTotal_ventas());
+            jDRangoInicio.setDate(new java.util.Date(p.getRango_inicio().toString().replace("-", "/")));
+            jDRangoTermino.setDate(new java.util.Date(p.getRango_termino().toString().replace("-", "/")));
+            //se desactiva la ediciobn
+            abrirInforme();
+            cargarTabla(p.getRango_inicio(),p.getRango_termino());     
+            
+        }     
 
+    }
+    private void abrirInforme(){
+        jBCargarDatos.setVisible(false);        
+        jDRangoInicio.setEnabled(false);
+        jDRangoTermino.setEnabled(false);
     }
     
     private void GraficarTabla(){
         DefaultCategoryDataset datosGrafico = new DefaultCategoryDataset();
         for (int i = 0; i < Tabla.getRowCount(); i++) {                        
-            datosGrafico.setValue(Integer.parseInt(Tabla.getValueAt(i, 1).toString()),Tabla.getValueAt(i, 0).toString(), "test");
+            datosGrafico.setValue(Integer.parseInt(Tabla.getValueAt(i, 1).toString()),Tabla.getValueAt(i, 0).toString(), "Servicios");
         }
         JFreeChart grafico = ChartFactory.createBarChart3D("Informe", "Venta por Tipo Servicio", "Recuento", datosGrafico, PlotOrientation.VERTICAL, true, true, false);
         ChartPanel panel = new ChartPanel(grafico);
@@ -80,12 +111,14 @@ public class JDInforme extends javax.swing.JDialog {
         }
     }
     
-    private void cargarTabla(){
+    private void cargarTabla(java.sql.Date rangoInicio,java.sql.Date rangoTermino){
+        limpiarTabla(modelo);
+        List<Object[]> lista = dao.ContarServicios(rangoInicio, rangoTermino);
         modelo = (DefaultTableModel) Tabla.getModel();
         Object[] ob = new Object[2];
-        for (int i = 0; i < 7; i++) {
-            ob[0] = "categoria "+i;
-            ob[1] = (int)Math.floor(Math.random()*9); //genera un numero aleatorio entre 0 y 9
+        for (int i = 0; i < lista.size(); i++) {
+            ob[0] = lista.get(i)[0];
+            ob[1] = lista.get(i)[1];
             modelo.addRow(ob);
         }
         Tabla.setModel(modelo);
@@ -155,10 +188,11 @@ public class JDInforme extends javax.swing.JDialog {
         jLRut9 = new javax.swing.JLabel();
         jLRut10 = new javax.swing.JLabel();
         jLRut11 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
+        jTCantidadBoletas = new javax.swing.JTextField();
+        jTCantidadTickets = new javax.swing.JTextField();
+        jTTotalVentas = new javax.swing.JTextField();
+        jBCargarDatos = new javax.swing.JButton();
+        jPanelBTNConfirmar = new javax.swing.JPanel();
         jBConfirmar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLRut5 = new javax.swing.JLabel();
@@ -235,15 +269,15 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
+                    .addComponent(jTCantidadBoletas)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLRut9)
                             .addComponent(jLRut10)
                             .addComponent(jLRut11))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField3))
+                    .addComponent(jTCantidadTickets, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTTotalVentas))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -252,17 +286,25 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTCantidadBoletas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLRut10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTCantidadTickets, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLRut11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jBCargarDatos.setText("Generar Informe");
+        jBCargarDatos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBCargarDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCargarDatosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -272,12 +314,15 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLRut4)
-                            .addComponent(jLRut8))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLRut8)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBCargarDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(7, 7, 7))
         );
         jPanel2Layout.setVerticalGroup(
@@ -288,7 +333,9 @@ public class JDInforme extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLRut8)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLRut8)
+                    .addComponent(jBCargarDatos))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -302,18 +349,18 @@ public class JDInforme extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelBTNConfirmarLayout = new javax.swing.GroupLayout(jPanelBTNConfirmar);
+        jPanelBTNConfirmar.setLayout(jPanelBTNConfirmarLayout);
+        jPanelBTNConfirmarLayout.setHorizontalGroup(
+            jPanelBTNConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBTNConfirmarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jBConfirmar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        jPanelBTNConfirmarLayout.setVerticalGroup(
+            jPanelBTNConfirmarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelBTNConfirmarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jBConfirmar)
                 .addContainerGap())
@@ -425,7 +472,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -445,7 +492,7 @@ public class JDInforme extends javax.swing.JDialog {
                                 .addGap(0, 154, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanelBTNConfirmar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
@@ -466,7 +513,7 @@ public class JDInforme extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelBTNConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -491,8 +538,7 @@ public class JDInforme extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        limpiarTabla(modelo);
-        cargarTabla();
+        limpiarTabla(modelo);        
         
         
         /*
@@ -510,6 +556,10 @@ public class JDInforme extends javax.swing.JDialog {
     private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jBCancelar1ActionPerformed
+
+    private void jBCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarDatosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBCargarDatosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -560,6 +610,7 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JPanel JPanelGrafico;
     private javax.swing.JTable Tabla;
     private javax.swing.JButton jBCancelar1;
+    private javax.swing.JButton jBCargarDatos;
     private javax.swing.JButton jBConfirmar;
     private com.toedter.calendar.JDateChooser jDRangoInicio;
     private com.toedter.calendar.JDateChooser jDRangoTermino;
@@ -574,15 +625,15 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelTituloInforme1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelBTNConfirmar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTCantidadBoletas;
+    private javax.swing.JTextField jTCantidadTickets;
+    private javax.swing.JTextField jTTotalVentas;
     // End of variables declaration//GEN-END:variables
 }

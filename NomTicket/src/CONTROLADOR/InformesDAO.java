@@ -2,7 +2,6 @@ package CONTROLADOR;
 
 import CONEXION_BD.Conexion;
 import MODELOS.INFORME_TICKET;
-import MODELOS.PRODUCTO;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -122,6 +121,36 @@ public class InformesDAO implements CRUD {
             RegistrarError("CONTROLADOR.InformesDAO.Listar(Date Fecha)", e.getMessage());
         }
         return lista;
+    }
+    
+    public List ContarServicios(Date rangoInicio,Date rangoTermino){
+        List<Object[]> lista = new ArrayList<>();
+        String sql = "select tpr.nom_tipo_producto,count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id" +
+"                                                                            where dtb.fk_num_boleta_id in (" +
+"                                                                            select num_boleta from boleta where fecha_boleta BETWEEN trunc(?) and trunc(?)+1" +
+"                                                                            )group by tpr.nom_tipo_producto";
+        
+        try {
+            
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setDate(1, rangoInicio);
+            ps.setDate(2, rangoTermino);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                Object[] ob = new Object[2];
+                ob[0] = rs.getString(1);
+                ob[1] = rs.getInt(2);                
+                lista.add(ob);
+            }
+            con.close();
+            
+
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.InformesDAO.ContarServicios(Date rangoInicio,Date rangoTermino)", e.getMessage());
+        }
+        return lista;
+        
     }
 
     @Override

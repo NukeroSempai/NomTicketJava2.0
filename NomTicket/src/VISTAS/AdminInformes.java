@@ -506,8 +506,8 @@ public class AdminInformes extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
         } else {
             JDInfo = new JDInforme(new javax.swing.JDialog(), true);
-            JDInfo.setModalidad(InformesDAO.ABRIR);
             JDInfo.setProducto(f);
+            JDInfo.setModalidad(InformesDAO.ABRIR);            
             cambiarModulo(JDInfo);
             limpiarTabla();
             listar();
@@ -533,18 +533,25 @@ public class AdminInformes extends javax.swing.JDialog {
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
         } else {
-            String codigo = tabla.getValueAt(fila, 0).toString();
-            String nombre = tabla.getValueAt(fila, 1).toString();
-            String descripcion = tabla.getValueAt(fila, 2).toString();
-            String tipoProducto = tabla.getValueAt(fila, 3).toString();
-            String precio = tabla.getValueAt(fila, 4).toString();
-            /*
-            f.setCodigo_producto(Integer.parseInt(codigo));
-            f.setNombre(nombre);
-            f.setDescripcion(descripcion);
-            f.setFk_tipo_producto(tipoProd.indexOf(tipoProducto));
-            f.setPrecio(Integer.parseInt(precio));
-            */
+            int correlativo = Integer.parseInt(tabla.getValueAt(fila,0).toString());
+            Date fecha_inf = java.sql.Date.valueOf(tabla.getValueAt(fila,1).toString());
+            Date rango_ini = java.sql.Date.valueOf(tabla.getValueAt(fila,2).toString());
+            Date rango_ter = java.sql.Date.valueOf(tabla.getValueAt(fila,3).toString());
+            int Nboletas = Integer.parseInt(tabla.getValueAt(fila,4).toString());
+            int NTickets = Integer.parseInt(tabla.getValueAt(fila,5).toString());
+            int TVentas = Integer.parseInt(tabla.getValueAt(fila,6).toString());
+            String Tinforme = tabla.getValueAt(fila,7).toString();
+            
+            f.setCorrelativo_inf(correlativo);
+            f.setFecha_informe(fecha_inf);
+            f.setRango_inicio(rango_ini);
+            f.setRango_termino(rango_ter);
+            f.setCant_boletas(Nboletas);
+            f.setCant_tickets(NTickets);
+            f.setTotal_ventas(TVentas);
+            f.setTipo_informe(Tinforme);
+            
+            System.out.println(f.getRango_inicio().toString());
         }
     }//GEN-LAST:event_tablaMouseClicked
 
