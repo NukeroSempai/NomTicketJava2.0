@@ -27,6 +27,11 @@ public class InformesDAO implements CRUD {
     //FUNCIONES DE CONTROLADOR
     public static final int AGREGAR = 0;
     public static final int ABRIR = 1;
+    //FUNCIONES DE CONTROLADOR ADICIONALES 
+    public static final int SERVICIOS = 0;
+    public static final int PRODUCTOS = 1;
+    public static final int VENTAS = 2;
+    public static final int TICKET = 3;
 
     //metodos personalizados
     private void RegistrarError(String modulo,String mensaje) {
@@ -123,13 +128,27 @@ public class InformesDAO implements CRUD {
         return lista;
     }
     
-    public List ContarServicios(Date rangoInicio,Date rangoTermino){
+    public List ContarServicios(Date rangoInicio,Date rangoTermino,int Modalidad){
+        String contador ="";
+        if(Modalidad == 0){
+            contador = "tpr.nom_tipo_producto";
+        }
+        if(Modalidad == 1){
+            contador = "pro.nom_producto";
+        }
+        
         List<Object[]> lista = new ArrayList<>();
-        String sql = "select tpr.nom_tipo_producto,count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id" +
+        String sql = "select "+ contador +",count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id" +
 "                                                                            where dtb.fk_num_boleta_id in (" +
 "                                                                            select num_boleta from boleta where fecha_boleta BETWEEN trunc(?) and trunc(?)+1" +
-"                                                                            )group by tpr.nom_tipo_producto";
+"                                                                            )group by " + contador;
+        if(Modalidad ==2){
+            sql ="select to_char(fecha_boleta,'dd/MM/yyyy'),count(trunc(fecha_boleta)) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
+        }
         
+        if(Modalidad ==3){
+            sql ="select to_char(fecha_boleta,'dd/MM/yyyy'),count(fk_codigo_ticket_id) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
+        }
         try {
             
             con = cn.Conectar();
@@ -149,8 +168,7 @@ public class InformesDAO implements CRUD {
         } catch (Exception e) {            
             RegistrarError("CONTROLADOR.InformesDAO.ContarServicios(Date rangoInicio,Date rangoTermino)", e.getMessage());
         }
-        return lista;
-        
+        return lista;        
     }
 
     @Override
