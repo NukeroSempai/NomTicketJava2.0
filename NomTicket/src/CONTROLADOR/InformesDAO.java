@@ -128,6 +128,30 @@ public class InformesDAO implements CRUD {
         return lista;
     }
     
+    public List generarResumen(Date rangoInicio,Date rangoTermino){
+        List<Object[]> lista = new ArrayList<>();
+        String sql ="select count(num_boleta),count(fk_codigo_ticket_id),sum(valor_total) from boleta where trunc(fecha_boleta) BETWEEN trunc(?) and trunc(?)";
+        try {
+            
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setDate(1, rangoInicio);
+            ps.setDate(2, rangoTermino);
+            rs = ps.executeQuery();
+            while (rs.next()) {                
+                Object[] ob = new Object[3];
+                ob[0] = rs.getInt(1);
+                ob[1] = rs.getInt(2);
+                ob[2] = rs.getInt(3);
+                lista.add(ob);
+            }
+            con.close();
+        } catch (Exception e) {            
+            RegistrarError("CONTROLADOR.InformesDAO.generarResumen(Date rangoInicio,Date rangoTermino)", e.getMessage());
+        }
+        return lista;
+    }   
+    
     public List ContarServicios(Date rangoInicio,Date rangoTermino,int Modalidad){
         String contador ="";
         if(Modalidad == 0){
@@ -174,57 +198,35 @@ public class InformesDAO implements CRUD {
     @Override
     public int add(Object[] o) {
         int r = 0;
-        String sql = "insert into producto(codigo_producto,nom_producto,descripcion,fk_tipo_producto_id,precio)values(ISEQ$$_79699.nextval,?,?,?,?)";
+        String sql = "insert into informe_ticket(correlativo_inf,fecha_informe,rango_inicio,rango_termino,cant_boletas,cant_tickets,total_ventas,tipo_informe)values(ISEQ$$_79707.nextval,sysdate-4/24,?,?,?,?,?,'Personalizado')";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
-            //el codigo del producto es generado directamente en la base de datos por una secuencia. este dato sera omitido
-            ps.setObject(1, o[0]);//nombre
-            ps.setObject(2, o[1]);//descripcion
-            ps.setObject(3, o[2]);//tipo producto
-            ps.setObject(4, o[3]);//precio
+            //el codigo del informe es generado directamente en la base de datos por una secuencia. este dato sera omitido
+            ps.setObject(1, o[0]);//rangoInicio
+            ps.setObject(2, o[1]);//rangoTermino
+            ps.setObject(3, o[2]);//Cant_boletas
+            ps.setObject(4, o[3]);//Cant_tickets
+            ps.setObject(5, o[4]);//total_ventas            
+            
             r = ps.executeUpdate();
             con.close();
         } catch (Exception e) {            
-            RegistrarError("CONTROLADOR.ProductosDAO.add()", e.getMessage().toString());
+            RegistrarError("CONTROLADOR.InformesDAO.add()", e.getMessage().toString());
         }
         return r;
-    }
+    }  
 
     @Override
     public int actualizar(Object[] o) {
-        int r = 0;
-        String sql = "update producto set codigo_producto=?, nom_producto=?,descripcion=?,fk_tipo_producto_id=?, precio=? where codigo_producto=?";
-        try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setObject(1, o[0]);
-            ps.setObject(2, o[1]);
-            ps.setObject(3, o[2]);
-            ps.setObject(4, o[3]);
-            ps.setObject(5, o[4]);
-            ps.setObject(6, o[5]);
-            r = ps.executeUpdate();
-            con.close();
-        } catch (Exception e) {            
-            RegistrarError("CONTROLADOR.ProductosDAO.actualizar()", e.getMessage());
-        }
-        return r;
+        //no se crea el metodo actualizar pues , no se utilizara, aun asi puede ser implementado a futuro sin problemas.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public int eliminar(String id) {
-        int r = 0;
-        String sql = "delete from producto where codigo_producto=?";
-        try {
-            con = cn.Conectar();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, Integer.parseInt(id));
-            r = ps.executeUpdate();
-            con.close();
-        } catch (Exception e) {            
-            RegistrarError("CONTROLADOR.ProductosDAO.eliminar()", e.getMessage());
-        }
-        return r;
+        //no se crea el metodo eliminar pues , no se utilizara, aun asi puede ser implementado a futuro sin problemas.
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
 }

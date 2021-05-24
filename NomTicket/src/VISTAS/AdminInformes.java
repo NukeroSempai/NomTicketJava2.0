@@ -515,14 +515,18 @@ public class AdminInformes extends javax.swing.JDialog {
     }//GEN-LAST:event_jBAbrirInformeActionPerformed
 
     private void jBFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFiltrarActionPerformed
-        limpiarTabla();
-        String fecha = ((JTextField) jDTFiltrar.getDateEditor().getUiComponent()).getText();
-        System.out.println(fecha);        
+        if(jDTFiltrar.getDate()==null){
+            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fecha");
+        }
+        limpiarTabla();               
         listar(new java.sql.Date(jDTFiltrar.getDate().getTime()));        
         
     }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void jBBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBBuscarActionPerformed
+        if(jTtBuscar.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Debe ingresar un valor");
+        }
         limpiarTabla();
         buscar();
         jTtBuscar.setText("");

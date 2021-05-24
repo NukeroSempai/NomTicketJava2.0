@@ -37,17 +37,18 @@ public class JDInforme extends javax.swing.JDialog {
     private int MODALIDAD;
 
     private InformesDAO dao = new InformesDAO();
-    private INFORME_TICKET p = new INFORME_TICKET();    
-    private EVENTOS event = new EVENTOS(); 
+    private INFORME_TICKET p = new INFORME_TICKET();
+    private EVENTOS event = new EVENTOS();
     private DefaultTableModel modeloServicio = new DefaultTableModel();
     private DefaultTableModel modeloProducto = new DefaultTableModel();
     private DefaultTableModel modeloVenta = new DefaultTableModel();
     private DefaultTableModel modeloTicket = new DefaultTableModel();
+    private final DefaultTableModel modeloDefecto = new DefaultTableModel();
 
     public JDInforme(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTCantidadBoletas.setEditable(false);        
+        jTCantidadBoletas.setEditable(false);
         jTCantidadTickets.setEditable(false);
         jTTotalVentas.setEditable(false);
     }
@@ -58,73 +59,96 @@ public class JDInforme extends javax.swing.JDialog {
     }
 
     public void setProducto(INFORME_TICKET informe) {
-        this.p = informe;        
+        this.p = informe;
     }
 
     private void inicializar() {
-        if(MODALIDAD==0){//modo agregar informe            
+        jDRangoInicio.setDateFormatString("yyyy-MM-dd");
+        jDRangoTermino.setDateFormatString("yyyy-MM-dd");
+        if (MODALIDAD == 0) {//modo agregar informe            
             jLabelTituloInforme1.setText("Generar Informe");
-        }else{//modo abrir informe
+        } else {//modo abrir informe
             //configuracion de formulario
-            jLabelTituloInforme1.setText("Informe N° "+p.getCorrelativo_inf());
+            jLabelTituloInforme1.setText("Informe N° " + p.getCorrelativo_inf());
             //carga de datos
-            jTCantidadBoletas.setText(""+p.getCant_boletas());
-            jTCantidadTickets.setText(""+p.getCant_tickets());
-            jTTotalVentas.setText(""+p.getTotal_ventas());
+            jTCantidadBoletas.setText("" + p.getCant_boletas());
+            jTCantidadTickets.setText("" + p.getCant_tickets());
+            jTTotalVentas.setText("" + p.getTotal_ventas());
             jDRangoInicio.setDate(new java.util.Date(p.getRango_inicio().toString().replace("-", "/")));
             jDRangoTermino.setDate(new java.util.Date(p.getRango_termino().toString().replace("-", "/")));
-            //se desactiva la ediciobn
+            //se desactiva la edicion
             abrirInforme();
             //cargar tabla servicios
-            cargarTabla(p.getRango_inicio(),p.getRango_termino(),modeloServicio,TablaServicio,InformesDAO.SERVICIOS);
+            cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloServicio, TablaServicio, InformesDAO.SERVICIOS);
             GraficarTabla(TablaServicio, "Servicio", JPanelGraficoServicio);
             //cargar tabla producto
-            cargarTabla(p.getRango_inicio(),p.getRango_termino(),modeloProducto,TablaProductos,InformesDAO.PRODUCTOS);
+            cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloProducto, TablaProductos, InformesDAO.PRODUCTOS);
             GraficarTabla(TablaProductos, "Producto", JPanelGraficoProductos);
             //carta tabla ventas
-            cargarTabla(p.getRango_inicio(),p.getRango_termino(),modeloVenta,TablaVentas,InformesDAO.VENTAS);
+            cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloVenta, TablaVentas, InformesDAO.VENTAS);
             GraficarTabla(TablaVentas, "Ventas", JPanelGraficoVentas);
             //cargar tabla ticket
-            cargarTabla(p.getRango_inicio(),p.getRango_termino(),modeloTicket,TablaTicket,InformesDAO.TICKET);
+            cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloTicket, TablaTicket, InformesDAO.TICKET);
             GraficarTabla(TablaTicket, "Tickets", JPanelGraficoTicket);
-        }     
+        }
 
     }
-    private void abrirInforme(){
-        jBCargarDatos.setVisible(false);        
+
+    private void abrirInforme() {
+        jBCargarDatos.setVisible(false);
         jDRangoInicio.setEnabled(false);
         jDRangoTermino.setEnabled(false);
+        jBGuardarInforme.setVisible(false);
+        jPanelGuardarInforme.setBackground(new Color(225, 139, 34));
     }
-    
-    private void GraficarTabla(javax.swing.JTable tabla,String titulo,JPanel panel){
+
+    private void GraficarTabla(javax.swing.JTable tabla, String titulo, JPanel panel) {
         DefaultCategoryDataset datosGrafico = new DefaultCategoryDataset();
-        for (int i = 0; i < tabla.getRowCount(); i++) {                        
-            datosGrafico.setValue(Integer.parseInt(tabla.getValueAt(i, 1).toString()),tabla.getValueAt(i, 0).toString(), titulo);
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            datosGrafico.setValue(Integer.parseInt(tabla.getValueAt(i, 1).toString()), tabla.getValueAt(i, 0).toString(), titulo);
         }
-        JFreeChart grafico = ChartFactory.createBarChart3D("Informe", "Venta por "+titulo, "Recuento", datosGrafico, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart grafico = ChartFactory.createBarChart3D("Informe", "Venta por " + titulo, "Recuento", datosGrafico, PlotOrientation.VERTICAL, true, true, false);
         ChartPanel panelGrafico = new ChartPanel(grafico);
         panelGrafico.setPreferredSize(panel.getSize());
-        
+
         panel.removeAll();
         panel.setLayout(new BorderLayout());
-        
-        panel.add(panelGrafico,BorderLayout.CENTER);
+
+        panel.add(panelGrafico, BorderLayout.CENTER);
         panel.validate();
-        
+
         pack();
         panel.repaint();
     }
-    
-    private void limpiarTabla(DefaultTableModel modelo){
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-            modelo.removeRow(i);
+
+    private void limpiarTablas() {
+        for (int i = 0; i < modeloServicio.getRowCount(); i++) {
+            modeloServicio.removeRow(i);
             i = i - 1;
         }
+        modeloServicio = (DefaultTableModel) TablaServicio.getModel();
+
+        for (int i = 0; i < modeloProducto.getRowCount(); i++) {
+            modeloProducto.removeRow(i);
+            i = i - 1;
+        }
+        modeloProducto = (DefaultTableModel) TablaProductos.getModel();
+
+        for (int i = 0; i < modeloTicket.getRowCount(); i++) {
+            modeloTicket.removeRow(i);
+            i = i - 1;
+        }
+        modeloTicket = (DefaultTableModel) TablaTicket.getModel();
+
+        for (int i = 0; i < modeloVenta.getRowCount(); i++) {
+            modeloVenta.removeRow(i);
+            i = i - 1;
+        }
+        modeloVenta = (DefaultTableModel) TablaVentas.getModel();
     }
-    
-    private void cargarTabla(java.sql.Date rangoInicio,java.sql.Date rangoTermino,DefaultTableModel modelo,javax.swing.JTable tabla, int modalidad){
-        limpiarTabla(modelo);
-        List<Object[]> lista = dao.ContarServicios(rangoInicio, rangoTermino,modalidad);
+
+    private void cargarTabla(java.sql.Date rangoInicio, java.sql.Date rangoTermino, DefaultTableModel modelo, javax.swing.JTable tabla, int modalidad) {
+        List<Object[]> lista = dao.ContarServicios(rangoInicio, rangoTermino, modalidad);
         modelo = (DefaultTableModel) tabla.getModel();
         Object[] ob = new Object[2];
         for (int i = 0; i < lista.size(); i++) {
@@ -134,52 +158,33 @@ public class JDInforme extends javax.swing.JDialog {
         }
         tabla.setModel(modelo);
     }
-
-
-    private void Agregar() {
-        /*
-        String nom_prod = jTextNombre.getText();
-        String desc_prod = jTextDescripcion.getText();
-        int tipo = jComboCategoria.getSelectedIndex() + 1;
-        String precio_prod = jTextPrecio.getText();
-        Object[] ob = new Object[4];
-        ob[0] = nom_prod;
-        ob[1] = desc_prod;
-        ob[2] = tipo;
-        ob[3] = precio_prod;
-        System.out.println(ob[0]);
-        System.out.println(ob[1]);
-        System.out.println(ob[2]);
-        System.out.println(ob[3]);        
-        if (dao.add(ob) > 0) {
-            JOptionPane.showMessageDialog(null, "Producto Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
-        } else {
-            JOptionPane.showMessageDialog(null, "error al agregar producto", "error!", JOptionPane.ERROR_MESSAGE);
-        }
-        */
+    
+    private void cargarResumen(){
+        List<Object[]> lista = dao.generarResumen(p.getRango_inicio(), p.getRango_termino());        
+        
+        for (int i = 0; i < lista.size(); i++) {
+            jTCantidadBoletas.setText(lista.get(i)[0].toString());
+            jTCantidadTickets.setText(lista.get(i)[1].toString());
+            jTTotalVentas.setText(lista.get(i)[2].toString());            
+        }        
     }
 
-    private void Actualizar() {
-        /*
-        String nom_prod = jTextNombre.getText();
-        String desc_prod = jTextDescripcion.getText();
-        int tipo = jComboCategoria.getSelectedIndex() + 1;
-        int precio_prod = Integer.parseInt(jTextPrecio.getText());
-        Object[] obj = new Object[6];
-        obj[0] = p.getCodigo_producto();
-        obj[1] = nom_prod;
-        obj[2] = desc_prod;
-        obj[3] = tipo;
-        obj[4] = precio_prod;
-        obj[5] = p.getCodigo_producto();
-        if (dao.actualizar(obj) > 0) {
-            JOptionPane.showMessageDialog(null, "Producto Actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+    private void Agregar() {
+                
+        Object[] ob = new Object[5];
+        ob[0] = p.getRango_inicio();
+        ob[1] = p.getRango_termino();
+        ob[2] = Integer.parseInt(jTCantidadBoletas.getText());
+        ob[3] = Integer.parseInt(jTCantidadTickets.getText());
+        ob[4] = Integer.parseInt(jTTotalVentas.getText());               
+        if (dao.add(ob) > 0) {
+            JOptionPane.showMessageDialog(null, "Informe Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar producto", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "error al guardar Informe", "error!", JOptionPane.ERROR_MESSAGE);
         }
-        */
-    }    
-    
+         
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -187,7 +192,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jLabelTituloInforme1 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
-        jBCancelar1 = new javax.swing.JButton();
+        jBCancelar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLRut4 = new javax.swing.JLabel();
         jLRut6 = new javax.swing.JLabel();
@@ -232,6 +237,8 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel14 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         TablaVentas = new javax.swing.JTable();
+        jPanelGuardarInforme = new javax.swing.JPanel();
+        jBGuardarInforme = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -241,11 +248,11 @@ public class JDInforme extends javax.swing.JDialog {
         jLabelTituloInforme1.setForeground(new java.awt.Color(255, 255, 255));
         jLabelTituloInforme1.setText("<MODALIDAD ENTRADA>");
 
-        jBCancelar1.setText("VOLVER");
-        jBCancelar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jBCancelar1.addActionListener(new java.awt.event.ActionListener() {
+        jBCancelar.setText("VOLVER");
+        jBCancelar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBCancelar1ActionPerformed(evt);
+                jBCancelarActionPerformed(evt);
             }
         });
 
@@ -255,14 +262,14 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jBCancelar1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addComponent(jBCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jBCancelar1)
+                .addComponent(jBCancelar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -449,7 +456,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -471,7 +478,7 @@ public class JDInforme extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(35, 35, 35))
         );
 
         jTabbedPane5.addTab("Servicios", jPanel2);
@@ -492,7 +499,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoProductosLayout.setVerticalGroup(
             JPanelGraficoProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
+            .addGap(0, 446, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -556,7 +563,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -598,7 +605,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoTicketLayout.setVerticalGroup(
             JPanelGraficoTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
+            .addGap(0, 446, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
@@ -662,7 +669,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -705,7 +712,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoVentasLayout.setVerticalGroup(
             JPanelGraficoVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 458, Short.MAX_VALUE)
+            .addGap(0, 446, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -769,7 +776,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -807,7 +814,35 @@ public class JDInforme extends javax.swing.JDialog {
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane5)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane5)
+                .addContainerGap())
+        );
+
+        jBGuardarInforme.setText("GUARDAR");
+        jBGuardarInforme.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarInforme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarInformeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelGuardarInformeLayout = new javax.swing.GroupLayout(jPanelGuardarInforme);
+        jPanelGuardarInforme.setLayout(jPanelGuardarInformeLayout);
+        jPanelGuardarInformeLayout.setHorizontalGroup(
+            jPanelGuardarInformeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGuardarInformeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jBGuardarInforme, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanelGuardarInformeLayout.setVerticalGroup(
+            jPanelGuardarInformeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelGuardarInformeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jBGuardarInforme)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -825,7 +860,9 @@ public class JDInforme extends javax.swing.JDialog {
                     .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanelGuardarInforme, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -843,6 +880,8 @@ public class JDInforme extends javax.swing.JDialog {
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelGuardarInforme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -866,13 +905,44 @@ public class JDInforme extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jBCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelar1ActionPerformed
+    private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jBCancelar1ActionPerformed
+    }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarDatosActionPerformed
-        // TODO add your handling code here:
+        if (jDRangoInicio.getDate() == null || jDRangoTermino.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fecha");
+        } else {
+            //es necesario ejecutar la limpieza de tablas 2 veces, desconozco el motivo tecnido del "POR QUE!?"
+            if (TablaServicio.getRowCount() != 0) {
+                for (int i = 0; i < 2; i++) {
+                    limpiarTablas();
+                }
+            }else{                
+                //limpiarTablas();
+                p.setRango_inicio(new java.sql.Date(jDRangoInicio.getDate().getTime()));
+                p.setRango_termino(new java.sql.Date(jDRangoTermino.getDate().getTime()));
+                cargarResumen();
+                //cargar tabla servicios
+                cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloServicio, TablaServicio, InformesDAO.SERVICIOS);
+                GraficarTabla(TablaServicio, "Servicio", JPanelGraficoServicio);
+                //cargar tabla producto
+                cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloProducto, TablaProductos, InformesDAO.PRODUCTOS);
+                GraficarTabla(TablaProductos, "Producto", JPanelGraficoProductos);
+                //carta tabla ventas
+                cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloVenta, TablaVentas, InformesDAO.VENTAS);
+                GraficarTabla(TablaVentas, "Ventas", JPanelGraficoVentas);
+                //cargar tabla ticket
+                cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloTicket, TablaTicket, InformesDAO.TICKET);
+                GraficarTabla(TablaTicket, "Tickets", JPanelGraficoTicket);
+            }
+        }
     }//GEN-LAST:event_jBCargarDatosActionPerformed
+
+    private void jBGuardarInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarInformeActionPerformed
+        Agregar();
+        this.dispose();
+    }//GEN-LAST:event_jBGuardarInformeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -928,8 +998,9 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JTable TablaServicio;
     private javax.swing.JTable TablaTicket;
     private javax.swing.JTable TablaVentas;
-    private javax.swing.JButton jBCancelar1;
+    private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBCargarDatos;
+    private javax.swing.JButton jBGuardarInforme;
     private com.toedter.calendar.JDateChooser jDRangoInicio;
     private com.toedter.calendar.JDateChooser jDRangoTermino;
     private javax.swing.JLabel jLRut10;
@@ -960,6 +1031,7 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPanel jPanelGuardarInforme;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
