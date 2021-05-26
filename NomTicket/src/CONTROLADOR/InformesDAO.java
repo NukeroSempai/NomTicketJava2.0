@@ -2,10 +2,23 @@ package CONTROLADOR;
 
 import CONEXION_BD.Conexion;
 import MODELOS.INFORME_TICKET;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Font;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,7 +228,94 @@ public class InformesDAO implements CRUD {
             RegistrarError("CONTROLADOR.InformesDAO.add()", e.getMessage().toString());
         }
         return r;
-    }  
+    }
+    
+    private String TituloModalidad(int modalidad){
+        String titulo ="";
+        if(modalidad == SERVICIOS){
+            titulo="Servicio";
+        }
+        if(modalidad == PRODUCTOS){
+            titulo="Productos";
+        }
+        if(modalidad == VENTAS){
+            titulo = "Ventas";
+        }
+        if(modalidad == TICKET){
+            titulo = "Tickets";
+        }
+        return titulo;
+    }
+    
+    public int GenerarInformePDF(javax.swing.JTable tabla,String titulo){
+        int r = 0;
+        Document documento = new Document();       
+        
+        try {
+            String ruta = System.getProperty("user.home");
+            //ir a escritorio + nombre de archivo
+            java.util.Date fecha = new java.util.Date();
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha)+".pdf"));
+            //abrir documento pdf
+            documento.open();
+            //Generar Encabezado
+            Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
+            logo.scaleToFit(80,80);
+            logo.setAlignment(Chunk.ALIGN_LEFT);
+            
+            Paragraph fechaInforme = new Paragraph();
+            fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            fechaInforme.add(Chunk.NEWLINE);
+            fechaInforme.setFont(FontFactory.getFont("Tahoma",12,Font.BOLD,BaseColor.DARK_GRAY));
+            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");
+            
+            Paragraph tituloInforme = new Paragraph();
+            tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            tituloInforme.add(Chunk.NEWLINE);
+            tituloInforme.setFont(FontFactory.getFont("Tahoma",24,Font.BOLD,BaseColor.DARK_GRAY));
+            tituloInforme.add(titulo+"\n\n\n");
+            //crear tabla para encabezado
+            PdfPTable encPdf = new PdfPTable(3);
+            encPdf.setWidthPercentage(100);
+            encPdf.setWidths(new float[]{20,75,30});            
+            encPdf.getDefaultCell().setBorder(0);
+            encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            
+            //agregar imagen
+            encPdf.addCell(logo);
+            encPdf.addCell("");
+            encPdf.addCell(fechaInforme);
+            
+            //encabezado.add(titulo+"\n\n");
+            
+            //agregar imagen y encabezado a documento
+            
+            documento.add(encPdf);
+            documento.add(tituloInforme);
+            
+            //algoritmo que crea numero de columnas en automatico
+            PdfPTable tablaPdf = new PdfPTable(tabla.getColumnCount());
+            tablaPdf.setWidthPercentage(100);
+            tablaPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            //escribir nombre de columnas en pdf
+            for (int i = 0; i < tabla.getColumnCount(); i++){
+                tablaPdf.addCell(tabla.getColumnName(i));
+            }
+            //escribir datos de la tabla al pdf
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                for (int j = 0; j < tabla.getColumnCount(); j++) {                    
+                    tablaPdf.addCell(tabla.getModel().getValueAt(i,j).toString());                    
+                }                
+            }            
+            documento.add(tablaPdf);
+            //cerrar documento
+            documento.close();
+            r=1;
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformePDF(javax.swing.JTtable tabla, String titulo)", e.getMessage().toString());
+        }
+        return r;
+    }
 
     @Override
     public int actualizar(Object[] o) {
