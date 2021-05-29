@@ -379,12 +379,15 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel4" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jBGuardarServicioPDF" max="32767" attributes="0"/>
+                                  <Component id="jPanel9" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -393,10 +396,14 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel9" max="32767" attributes="0"/>
                                   <Component id="jPanel4" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jBGuardarServicioPDF" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jPanel9" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -456,7 +463,7 @@
                             </DimensionLayout>
                             <DimensionLayout dim="1">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="446" max="32767" attributes="0"/>
                               </Group>
                             </DimensionLayout>
                           </Layout>
@@ -479,7 +486,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane1" pref="445" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane1" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -498,7 +505,7 @@
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                                   <Table columnCount="2" rowCount="0">
                                     <Column editable="false" title="Servicio" type="java.lang.String"/>
-                                    <Column editable="false" title="Conteo" type="java.lang.Integer"/>
+                                    <Column editable="false" title="Recuento" type="java.lang.Integer"/>
                                   </Table>
                                 </Property>
                                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -524,6 +531,19 @@
                         </Container>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jBGuardarServicioPDF">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GUARDAR EN PDF"/>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                            <LineBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGuardarServicioPDFActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel5">
@@ -552,8 +572,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel11" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jBGuardarProductoPDF" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -562,8 +585,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel12" max="32767" attributes="0"/>
                                   <Component id="jPanel11" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jBGuardarProductoPDF" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jPanel12" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -648,7 +675,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" pref="469" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane2" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -667,7 +694,7 @@
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                                   <Table columnCount="2" rowCount="0">
                                     <Column editable="false" title="Producto" type="java.lang.String"/>
-                                    <Column editable="false" title="Conteo" type="java.lang.Integer"/>
+                                    <Column editable="false" title="Recuento" type="java.lang.Integer"/>
                                   </Table>
                                 </Property>
                                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -693,6 +720,19 @@
                         </Container>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jBGuardarProductoPDF">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GUARDAR EN PDF"/>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                            <LineBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGuardarProductoPDFActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel15">
@@ -716,7 +756,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel16" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jPanel17" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jBGuardarTicketPDF" alignment="1" max="32767" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -726,8 +769,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel17" max="32767" attributes="0"/>
                                   <Component id="jPanel16" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jBGuardarTicketPDF" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jPanel17" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -812,7 +859,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane4" pref="469" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane4" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -831,7 +878,7 @@
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                                   <Table columnCount="2" rowCount="0">
                                     <Column editable="false" title="Dia" type="java.lang.String"/>
-                                    <Column editable="false" title="Conteo" type="java.lang.Integer"/>
+                                    <Column editable="false" title="Recuento" type="java.lang.Integer"/>
                                   </Table>
                                 </Property>
                                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -857,6 +904,19 @@
                         </Container>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jBGuardarTicketPDF">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GUARDAR EN PDF"/>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                            <LineBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGuardarTicketPDFActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanel6">
@@ -885,7 +945,10 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanel13" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jPanel14" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jPanel14" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jBGuardarVentasPDF" alignment="1" max="32767" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -895,8 +958,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jPanel14" max="32767" attributes="0"/>
                                   <Component id="jPanel13" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jBGuardarVentasPDF" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jPanel14" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -981,7 +1048,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane3" pref="469" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane3" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -1000,7 +1067,7 @@
                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                                   <Table columnCount="2" rowCount="0">
                                     <Column editable="false" title="Dia" type="java.lang.String"/>
-                                    <Column editable="false" title="Conteo" type="java.lang.Integer"/>
+                                    <Column editable="false" title="Recuento" type="java.lang.Integer"/>
                                   </Table>
                                 </Property>
                                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -1026,6 +1093,19 @@
                         </Container>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JButton" name="jBGuardarVentasPDF">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="GUARDAR EN PDF"/>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                            <LineBorder/>
+                          </Border>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGuardarVentasPDFActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
               </SubComponents>
@@ -1057,7 +1137,7 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="jBGuardarInforme">
               <Properties>
-                <Property name="text" type="java.lang.String" value="GUARDAR"/>
+                <Property name="text" type="java.lang.String" value="GUARDAR EN BASE DE DATOS"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                     <LineBorder/>

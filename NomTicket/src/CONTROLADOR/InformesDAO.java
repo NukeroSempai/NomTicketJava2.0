@@ -13,6 +13,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Font;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.Date;
@@ -21,6 +22,8 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
 
 /**
  *
@@ -247,10 +250,9 @@ public class InformesDAO implements CRUD {
         return titulo;
     }
     
-    public int GenerarInformePDF(javax.swing.JTable tabla,String titulo){
+    public int GenerarInformeBasicoPDF(javax.swing.JTable tabla,String titulo){
         int r = 0;
-        Document documento = new Document();       
-        
+        Document documento = new Document();
         try {
             String ruta = System.getProperty("user.home");
             //ir a escritorio + nombre de archivo
@@ -261,14 +263,12 @@ public class InformesDAO implements CRUD {
             //Generar Encabezado
             Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
             logo.scaleToFit(80,80);
-            logo.setAlignment(Chunk.ALIGN_LEFT);
-            
+            logo.setAlignment(Chunk.ALIGN_LEFT);            
             Paragraph fechaInforme = new Paragraph();
             fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
             fechaInforme.add(Chunk.NEWLINE);
             fechaInforme.setFont(FontFactory.getFont("Tahoma",12,Font.BOLD,BaseColor.DARK_GRAY));
-            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");
-            
+            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");            
             Paragraph tituloInforme = new Paragraph();
             tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
             tituloInforme.add(Chunk.NEWLINE);
@@ -280,19 +280,13 @@ public class InformesDAO implements CRUD {
             encPdf.setWidths(new float[]{20,75,30});            
             encPdf.getDefaultCell().setBorder(0);
             encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
-            
             //agregar imagen
             encPdf.addCell(logo);
             encPdf.addCell("");
             encPdf.addCell(fechaInforme);
-            
-            //encabezado.add(titulo+"\n\n");
-            
-            //agregar imagen y encabezado a documento
-            
+            //agregar imagen y encabezado a documento            
             documento.add(encPdf);
-            documento.add(tituloInforme);
-            
+            documento.add(tituloInforme);            
             //algoritmo que crea numero de columnas en automatico
             PdfPTable tablaPdf = new PdfPTable(tabla.getColumnCount());
             tablaPdf.setWidthPercentage(100);
@@ -312,7 +306,102 @@ public class InformesDAO implements CRUD {
             documento.close();
             r=1;
         } catch (Exception e) {
-            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformePDF(javax.swing.JTtable tabla, String titulo)", e.getMessage().toString());
+            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformeBasicoPDF(javax.swing.JTtable tabla, String titulo)", e.getMessage().toString());
+        }
+        return r;
+    }
+    
+    public int GenerarInformeCompletoPDF(javax.swing.JTable tabla,JFreeChart grafico,String titulo){
+        int r = 0;
+        Document documento = new Document();
+        
+        try {
+            String ruta = System.getProperty("user.home");
+            //ir a escritorio + nombre de archivo
+            java.util.Date fecha = new java.util.Date();
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha)+".pdf"));
+            //abrir documento pdf
+            documento.open();
+            //Generar Encabezado
+            Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
+            logo.scaleToFit(80,80);
+            logo.setAlignment(Chunk.ALIGN_LEFT);            
+            Paragraph fechaInforme = new Paragraph();
+            fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            fechaInforme.add(Chunk.NEWLINE);
+            fechaInforme.setFont(FontFactory.getFont("Tahoma",12,Font.BOLD,BaseColor.DARK_GRAY));
+            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");            
+            Paragraph tituloInforme = new Paragraph();
+            tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            tituloInforme.add(Chunk.NEWLINE);
+            tituloInforme.setFont(FontFactory.getFont("Tahoma",24,Font.BOLD,BaseColor.DARK_GRAY));
+            tituloInforme.add(titulo+"\n\n\n");
+            //crear tabla para encabezado
+            PdfPTable encPdf = new PdfPTable(3);
+            encPdf.setWidthPercentage(100);
+            encPdf.setWidths(new float[]{20,75,30});            
+            encPdf.getDefaultCell().setBorder(0);
+            encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            //agregar imagen
+            encPdf.addCell(logo);
+            encPdf.addCell("");
+            encPdf.addCell(fechaInforme);
+            //agregar imagen y encabezado a documento            
+            documento.add(encPdf);
+            documento.add(tituloInforme);
+            
+            //crear titutlo pagina
+            Paragraph tituloPagina = new Paragraph();
+            tituloPagina.setAlignment(Paragraph.ALIGN_CENTER);
+            tituloPagina.add(Chunk.NEWLINE);
+            tituloPagina.setFont(FontFactory.getFont("Tahoma",18,Font.BOLD,BaseColor.DARK_GRAY));
+            tituloPagina.add(titulo+"\n\n");
+            
+            //crear tabla para pagina con grafico
+            PdfPTable cuerpoPDF = new PdfPTable(3);
+            cuerpoPDF.setWidthPercentage(100);
+            cuerpoPDF.setWidths(new float[]{70,10,50});            
+            cuerpoPDF.getDefaultCell().setBorder(0);
+            cuerpoPDF.setHorizontalAlignment(Element.ALIGN_LEFT);
+            
+            //crear imagen de grafico
+            String direccionImagen = "src/IMAGENES/GRAFICOS/image.png";
+            ChartUtilities.saveChartAsPNG(new File(direccionImagen), grafico, 600,800);
+            Image imgGrafico = Image.getInstance(direccionImagen);
+            imgGrafico.scaleToFit(80,80);
+            imgGrafico.setAlignment(Chunk.ALIGN_LEFT);   
+            
+            
+            
+            //algoritmo que crea numero de columnas en automatico
+            PdfPTable tablaContenidoPdf = new PdfPTable(tabla.getColumnCount());
+            tablaContenidoPdf.setWidthPercentage(100);
+            tablaContenidoPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            
+            //escribir nombre de columnas en pdf
+            for (int i = 0; i < tabla.getColumnCount(); i++){
+                tablaContenidoPdf.addCell(tabla.getColumnName(i));
+            }
+            
+            //escribir datos de la tabla al pdf
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                for (int j = 0; j < tabla.getColumnCount(); j++) {                    
+                    tablaContenidoPdf.addCell(tabla.getModel().getValueAt(i,j).toString());                    
+                }                
+            }      
+            
+            cuerpoPDF.addCell(imgGrafico);
+            cuerpoPDF.addCell("");
+            cuerpoPDF.addCell(tablaContenidoPdf);
+            
+            
+            documento.add(cuerpoPDF);
+            documento.newPage();
+            //cerrar documento
+            documento.close();
+            r=1;
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformePDF(javax.swing.JTtable tabla,JFreechart chart, String titulo)", e.getMessage().toString());
         }
         return r;
     }

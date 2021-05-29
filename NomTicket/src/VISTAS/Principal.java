@@ -373,7 +373,8 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jBUsuariosActionPerformed
 
     private void jBInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBInformesActionPerformed
-        // TODO add your handling code here:
+        AdminInformes adminInfo = new AdminInformes(new javax.swing.JDialog(),true);
+        cambiarModulo(adminInfo);
     }//GEN-LAST:event_jBInformesActionPerformed
 
     private void jBPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPerfilActionPerformed

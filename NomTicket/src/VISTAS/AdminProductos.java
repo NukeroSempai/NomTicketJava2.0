@@ -601,7 +601,7 @@ public class AdminProductos extends javax.swing.JDialog {
     }//GEN-LAST:event_jTtBuscarKeyTyped
 
     private void GuardarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarPDFActionPerformed
-        if(infDao.GenerarInformePDF(tabla, "Lista de Productos")==1){
+        if(infDao.GenerarInformeBasicoPDF(tabla, "Lista de Productos")==1){
             JOptionPane.showMessageDialog(null, "Informe creado exitosamente","Exito!",JOptionPane.INFORMATION_MESSAGE);
         }else{
             JOptionPane.showMessageDialog(this, "Error al guardar PDF");

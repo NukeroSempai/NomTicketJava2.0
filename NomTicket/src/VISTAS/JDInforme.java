@@ -14,12 +14,16 @@ import MODELOS.INFORME_TICKET;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -43,7 +47,6 @@ public class JDInforme extends javax.swing.JDialog {
     private DefaultTableModel modeloProducto = new DefaultTableModel();
     private DefaultTableModel modeloVenta = new DefaultTableModel();
     private DefaultTableModel modeloTicket = new DefaultTableModel();
-    private final DefaultTableModel modeloDefecto = new DefaultTableModel();
 
     public JDInforme(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
@@ -158,31 +161,45 @@ public class JDInforme extends javax.swing.JDialog {
         }
         tabla.setModel(modelo);
     }
-    
-    private void cargarResumen(){
-        List<Object[]> lista = dao.generarResumen(p.getRango_inicio(), p.getRango_termino());        
-        
+
+    private void cargarResumen() {
+        List<Object[]> lista = dao.generarResumen(p.getRango_inicio(), p.getRango_termino());
+
         for (int i = 0; i < lista.size(); i++) {
             jTCantidadBoletas.setText(lista.get(i)[0].toString());
             jTCantidadTickets.setText(lista.get(i)[1].toString());
-            jTTotalVentas.setText(lista.get(i)[2].toString());            
-        }        
+            jTTotalVentas.setText(lista.get(i)[2].toString());
+        }
+    }
+
+    private void guardarPDF(javax.swing.JPanel panel, javax.swing.JTable tabla, String titulo) {
+        JFreeChart graf = recuperarGrafico(panel);        
+        if (dao.GenerarInformeCompletoPDF(tabla, graf, titulo) > 0) {
+            JOptionPane.showMessageDialog(null, "Informe Guardado Correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+        } else {
+            JOptionPane.showMessageDialog(null, "error al guardar Informe", "error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private JFreeChart recuperarGrafico(javax.swing.JPanel panelGrafico) {
+        ChartPanel componente = (ChartPanel) panelGrafico.getComponent(0);
+        return componente.getChart();
     }
 
     private void Agregar() {
-                
+
         Object[] ob = new Object[5];
         ob[0] = p.getRango_inicio();
         ob[1] = p.getRango_termino();
         ob[2] = Integer.parseInt(jTCantidadBoletas.getText());
         ob[3] = Integer.parseInt(jTCantidadTickets.getText());
-        ob[4] = Integer.parseInt(jTTotalVentas.getText());               
+        ob[4] = Integer.parseInt(jTTotalVentas.getText());
         if (dao.add(ob) > 0) {
             JOptionPane.showMessageDialog(null, "Informe Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "error al guardar Informe", "error!", JOptionPane.ERROR_MESSAGE);
         }
-         
+
     }
 
     @SuppressWarnings("unchecked")
@@ -216,6 +233,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaServicio = new javax.swing.JTable();
+        jBGuardarServicioPDF = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         jLRut8 = new javax.swing.JLabel();
@@ -223,6 +241,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel12 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         TablaProductos = new javax.swing.JTable();
+        jBGuardarProductoPDF = new javax.swing.JButton();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jLRut13 = new javax.swing.JLabel();
@@ -230,6 +249,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel17 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         TablaTicket = new javax.swing.JTable();
+        jBGuardarTicketPDF = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         jLRut12 = new javax.swing.JLabel();
@@ -237,6 +257,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel14 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         TablaVentas = new javax.swing.JTable();
+        jBGuardarVentasPDF = new javax.swing.JButton();
         jPanelGuardarInforme = new javax.swing.JPanel();
         jBGuardarInforme = new javax.swing.JButton();
 
@@ -392,7 +413,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoServicioLayout.setVerticalGroup(
             JPanelGraficoServicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 446, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -423,7 +444,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Servicio", "Conteo"
+                "Servicio", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -456,19 +477,29 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
+
+        jBGuardarServicioPDF.setText("GUARDAR EN PDF");
+        jBGuardarServicioPDF.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarServicioPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarServicioPDFActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jBGuardarServicioPDF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -476,9 +507,12 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(35, 35, 35))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jBGuardarServicioPDF)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jTabbedPane5.addTab("Servicios", jPanel2);
@@ -530,7 +564,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Producto", "Conteo"
+                "Producto", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -563,9 +597,17 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                .addComponent(jScrollPane2)
                 .addContainerGap())
         );
+
+        jBGuardarProductoPDF.setText("GUARDAR EN PDF");
+        jBGuardarProductoPDF.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarProductoPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarProductoPDFActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -575,7 +617,9 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBGuardarProductoPDF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -583,8 +627,11 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jBGuardarProductoPDF)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -636,7 +683,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Dia", "Conteo"
+                "Dia", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -669,9 +716,17 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                .addComponent(jScrollPane4)
                 .addContainerGap())
         );
+
+        jBGuardarTicketPDF.setText("GUARDAR EN PDF");
+        jBGuardarTicketPDF.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarTicketPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarTicketPDFActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -681,7 +736,9 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBGuardarTicketPDF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
@@ -689,8 +746,11 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addComponent(jBGuardarTicketPDF)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -743,7 +803,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Dia", "Conteo"
+                "Dia", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -776,9 +836,17 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
         );
+
+        jBGuardarVentasPDF.setText("GUARDAR EN PDF");
+        jBGuardarVentasPDF.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarVentasPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarVentasPDFActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -788,7 +856,9 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBGuardarVentasPDF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -796,8 +866,11 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jBGuardarVentasPDF)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -820,7 +893,7 @@ public class JDInforme extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jBGuardarInforme.setText("GUARDAR");
+        jBGuardarInforme.setText("GUARDAR EN BASE DE DATOS");
         jBGuardarInforme.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jBGuardarInforme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -918,7 +991,7 @@ public class JDInforme extends javax.swing.JDialog {
                 for (int i = 0; i < 2; i++) {
                     limpiarTablas();
                 }
-            }else{                
+            } else {
                 //limpiarTablas();
                 p.setRango_inicio(new java.sql.Date(jDRangoInicio.getDate().getTime()));
                 p.setRango_termino(new java.sql.Date(jDRangoTermino.getDate().getTime()));
@@ -943,6 +1016,22 @@ public class JDInforme extends javax.swing.JDialog {
         Agregar();
         this.dispose();
     }//GEN-LAST:event_jBGuardarInformeActionPerformed
+
+    private void jBGuardarServicioPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarServicioPDFActionPerformed
+        guardarPDF(JPanelGraficoServicio,TablaServicio,"Informe Servicio");
+    }//GEN-LAST:event_jBGuardarServicioPDFActionPerformed
+
+    private void jBGuardarProductoPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarProductoPDFActionPerformed
+        guardarPDF(JPanelGraficoProductos,TablaProductos,"Informe Productos");
+    }//GEN-LAST:event_jBGuardarProductoPDFActionPerformed
+
+    private void jBGuardarTicketPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarTicketPDFActionPerformed
+        guardarPDF(JPanelGraficoTicket,TablaTicket,"Informe Tickets");
+    }//GEN-LAST:event_jBGuardarTicketPDFActionPerformed
+
+    private void jBGuardarVentasPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarVentasPDFActionPerformed
+        guardarPDF(JPanelGraficoVentas,TablaVentas,"Informe Ventas");
+    }//GEN-LAST:event_jBGuardarVentasPDFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1001,6 +1090,10 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBCargarDatos;
     private javax.swing.JButton jBGuardarInforme;
+    private javax.swing.JButton jBGuardarProductoPDF;
+    private javax.swing.JButton jBGuardarServicioPDF;
+    private javax.swing.JButton jBGuardarTicketPDF;
+    private javax.swing.JButton jBGuardarVentasPDF;
     private com.toedter.calendar.JDateChooser jDRangoInicio;
     private com.toedter.calendar.JDateChooser jDRangoTermino;
     private javax.swing.JLabel jLRut10;
