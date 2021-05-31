@@ -363,22 +363,28 @@ public class JDCajero extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        if (MODALIDAD == 0) {
-            Agregar();
-            this.dispose();
-        }
-        if (MODALIDAD == 1) {
-            if (jTextClave.getPassword().length != 0) {
-                String clave = "";
-                for (int i = 0; i < jTextClave.getPassword().length; i++) {
-                    clave += jTextClave.getPassword()[i];
-                }
-                Actualizar(clave);
-            } else {
-                Actualizar();
+        if(seg.verificarRUT(jTextRut.getText())==false){
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+        }else{
+            if (MODALIDAD == 0) {
+                Agregar();
+                this.dispose();
             }
-            this.dispose();
+            if (MODALIDAD == 1) {
+                if (jTextClave.getPassword().length != 0) {
+                    String clave = "";
+                    for (int i = 0; i < jTextClave.getPassword().length; i++) {
+                        clave += jTextClave.getPassword()[i];
+                    }
+                    Actualizar(clave);
+                } else {
+                    Actualizar();
+                }
+                this.dispose();
+            }
         }
+        
+        
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
     private void jCheckClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckClaveActionPerformed

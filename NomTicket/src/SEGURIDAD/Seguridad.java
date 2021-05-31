@@ -77,4 +77,56 @@ public class Seguridad {
         return autorizar;
     }
 
+    public boolean verificarRUT(String rut) {
+        boolean resultado = false;
+        char[] captura = rut.toCharArray();
+        char[] procesar = new char[8];
+        char[] inv_rut = new char[8];
+        int largo = 8;
+        //se ejecuta dentro de un try por si algun "usuario" se le ocurre poner alguna letra entre medio
+        try {
+            //copiar array sin incluir guion o verificador
+            for (int i = 0; i < 8; i++) {
+                procesar[i] = captura[i];
+            }
+            //invertir rut
+            for (int i = 0; i < procesar.length; i++) {
+                inv_rut[largo - 1] = procesar[i];
+                largo -= 1;
+            }
+            int regla = 2;
+            int suma = 0;
+            //multiplicar rut invertido po (2,3,4,5,6,7,2,3)
+            for (int i = 0; i < inv_rut.length; i++) {
+                suma += (Integer.parseInt(String.valueOf(inv_rut[i])) * regla);                
+                if (regla == 7) {
+                    regla = 1;
+                }
+                regla += 1;
+            }
+            //sacar modulo de 11
+            int resto = suma % 11;            
+            String digito = String.valueOf(11 - resto);
+            //regla de digito verificador
+            if (digito.equals("11")) {
+                digito = "0";
+            }
+            if (digito.equals("10")) {
+                digito = "k";
+            }
+            //terminar de validar rut
+            System.out.println("resto = "+resto);
+            System.out.println("digito = "+digito);            
+            if (digito.charAt(0)==rut.charAt(rut.length()-1)) {
+                resultado = true;
+                System.out.println("veridicar");
+            }
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return resultado;
+    }
+
 }

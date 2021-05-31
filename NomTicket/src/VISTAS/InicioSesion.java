@@ -151,22 +151,33 @@ public class InicioSesion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnConectarActionPerformed
-        String ingresoClave="";
-        for (int i = 0; i < jTextCLAVE.getPassword().length; i++) {
-            ingresoClave+=jTextCLAVE.getPassword()[i];
-        }
-        if(seg.iniciarSesion(jTextRUT.getText(), ingresoClave)==true){
-            JOptionPane.showMessageDialog(null, "Bienvenido!", "Exito!", JOptionPane.INFORMATION_MESSAGE);
-            if(usu.VerificarSuperUsuario(jTextRUT.getText())){
-                System.out.println("es admin");                
-                this.dispose();
-            }else{
-                System.out.println("es cajero");                
-                this.dispose();
-            }            
+        
+        if(jTextRUT.getText().length()!=10){
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
         }else{
-            JOptionPane.showMessageDialog(null, "ERROR de inicio de sesión", "error!", JOptionPane.ERROR_MESSAGE);
-        }
+            //verificar rut
+            if(seg.verificarRUT(jTextRUT.getText())==false){
+                JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+            }else{
+                //verificar clave
+                String ingresoClave = "";
+                for (int i = 0; i < jTextCLAVE.getPassword().length; i++) {
+                    ingresoClave += jTextCLAVE.getPassword()[i];
+                }
+                if (seg.iniciarSesion(jTextRUT.getText(), ingresoClave) == true) {
+                    JOptionPane.showMessageDialog(null, "Bienvenido!", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                    if (usu.VerificarSuperUsuario(jTextRUT.getText())) {
+                        System.out.println("es admin");
+                        this.dispose();
+                    } else {
+                        System.out.println("es cajero");
+                        this.dispose();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "ERROR de inicio de sesión", "error!", JOptionPane.ERROR_MESSAGE);
+                }
+            }            
+        }        
     }//GEN-LAST:event_jBtnConectarActionPerformed
 
     private void jBtnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSalirActionPerformed

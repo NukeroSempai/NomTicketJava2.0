@@ -271,25 +271,30 @@ public class JDPerfil extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        if (jTextClave1.getPassword().length != 0 && jTextClave2.getPassword().length!=0) {
-            String clave1 = "";            
-            for (int i = 0; i < jTextClave1.getPassword().length; i++) {
-                clave1 += jTextClave1.getPassword()[i];
-            }
-            String clave2 ="";
-            for (int i = 0; i < jTextClave2.getPassword().length; i++) {
-                clave2 += jTextClave2.getPassword()[i];
-            }
-            if(clave1.equals(clave2)){
-                Actualizar(clave1);
+        if(seg.verificarRUT(jTextRut.getText())==false){
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+        }else{
+            if (jTextClave1.getPassword().length != 0 && jTextClave2.getPassword().length != 0) {
+                String clave1 = "";
+                for (int i = 0; i < jTextClave1.getPassword().length; i++) {
+                    clave1 += jTextClave1.getPassword()[i];
+                }
+                String clave2 = "";
+                for (int i = 0; i < jTextClave2.getPassword().length; i++) {
+                    clave2 += jTextClave2.getPassword()[i];
+                }
+                if (clave1.equals(clave2)) {
+                    Actualizar(clave1);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                Actualizar();
                 this.dispose();
-            }else{
-                JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "error!", JOptionPane.ERROR_MESSAGE);
-            }            
-        } else {
-            Actualizar();
-            this.dispose();
-        }        
+            }
+        }
+                
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
     private void jCheckClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckClaveActionPerformed
