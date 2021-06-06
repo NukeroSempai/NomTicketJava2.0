@@ -169,6 +169,7 @@ public class AdminInformes extends javax.swing.JDialog {
         jButton13.setText("jButton13");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -287,6 +288,12 @@ public class AdminInformes extends javax.swing.JDialog {
         jBBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBBuscarActionPerformed(evt);
+            }
+        });
+
+        jTtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTtBuscarKeyTyped(evt);
             }
         });
 
@@ -569,6 +576,11 @@ public class AdminInformes extends javax.swing.JDialog {
         limpiarTabla();
         listar();
     }//GEN-LAST:event_formWindowActivated
+
+    private void jTtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTtBuscarKeyTyped
+        // TODO add your handling code here:
+        event.numberKeyPress(evt);
+    }//GEN-LAST:event_jTtBuscarKeyTyped
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

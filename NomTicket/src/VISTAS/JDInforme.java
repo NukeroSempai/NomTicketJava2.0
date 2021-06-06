@@ -262,6 +262,7 @@ public class JDInforme extends javax.swing.JDialog {
         jBGuardarInforme = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(225, 139, 34));
 
@@ -301,7 +302,7 @@ public class JDInforme extends javax.swing.JDialog {
         jLRut6.setText("RANGO DE INICIO");
 
         jLRut7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLRut7.setText("RANGO DE TERMINO");
+        jLRut7.setText("RANGO DE TÉRMINO");
 
         jBCargarDatos.setText("Generar Informe");
         jBCargarDatos.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -401,7 +402,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel2.setBorder(javax.swing.BorderFactory.createCompoundBorder());
 
         jLRut5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut5.setText("Grafico");
+        jLRut5.setText("Gráfico");
 
         JPanelGraficoServicio.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -413,7 +414,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoServicioLayout.setVerticalGroup(
             JPanelGraficoServicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
+            .addGap(0, 385, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -432,11 +433,10 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLRut5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(JPanelGraficoServicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(JPanelGraficoServicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         TablaServicio.setModel(new javax.swing.table.DefaultTableModel(
@@ -476,9 +476,8 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jBGuardarServicioPDF.setText("GUARDAR EN PDF");
@@ -507,12 +506,12 @@ public class JDInforme extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jBGuardarServicioPDF)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane5.addTab("Servicios", jPanel2);
@@ -521,7 +520,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel5.setBorder(javax.swing.BorderFactory.createCompoundBorder());
 
         jLRut8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut8.setText("Grafico");
+        jLRut8.setText("Gráfico");
 
         JPanelGraficoProductos.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -533,7 +532,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoProductosLayout.setVerticalGroup(
             JPanelGraficoProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
+            .addGap(0, 355, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -597,7 +596,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -640,7 +639,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel15.setBackground(new java.awt.Color(204, 204, 204));
 
         jLRut13.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut13.setText("Grafico");
+        jLRut13.setText("Gráfico");
 
         JPanelGraficoTicket.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -652,7 +651,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoTicketLayout.setVerticalGroup(
             JPanelGraficoTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
+            .addGap(0, 355, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
@@ -683,7 +682,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Dia", "Recuento"
+                "Día", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -716,7 +715,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel17Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -760,7 +759,7 @@ public class JDInforme extends javax.swing.JDialog {
         jPanel6.setBorder(javax.swing.BorderFactory.createCompoundBorder());
 
         jLRut12.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut12.setText("Grafico");
+        jLRut12.setText("Gráfico");
 
         JPanelGraficoVentas.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -772,7 +771,7 @@ public class JDInforme extends javax.swing.JDialog {
         );
         JPanelGraficoVentasLayout.setVerticalGroup(
             JPanelGraficoVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 446, Short.MAX_VALUE)
+            .addGap(0, 355, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -803,7 +802,7 @@ public class JDInforme extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Dia", "Recuento"
+                "Día", "Recuento"
             }
         ) {
             Class[] types = new Class [] {
@@ -836,7 +835,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -889,7 +888,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane5)
+                .addComponent(jTabbedPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 453, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -952,8 +951,8 @@ public class JDInforme extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanelGuardarInforme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
