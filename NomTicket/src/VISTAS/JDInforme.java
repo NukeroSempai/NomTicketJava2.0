@@ -11,6 +11,7 @@ import MODELOS.EVENTOS;
 import MODELOS.PRODUCTO;
 import CONTROLADOR.ProductosDAO;
 import MODELOS.INFORME_TICKET;
+import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
@@ -65,8 +67,8 @@ public class JDInforme extends javax.swing.JDialog {
         this.p = informe;
     }
 
-    private void inicializar() {
-        jDRangoInicio.setDateFormatString("yyyy-MM-dd");
+    private void inicializar() {        
+        jDRangoInicio.setDateFormatString("yyyy-MM-dd");        
         jDRangoTermino.setDateFormatString("yyyy-MM-dd");
         if (MODALIDAD == 0) {//modo agregar informe            
             jLabelTituloInforme1.setText("Generar Informe");

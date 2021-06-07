@@ -96,8 +96,7 @@ public class AdminVenta extends javax.swing.JDialog {
         }
     }
 
-    private void limpiarCampos() {
-        jTNumeroBoleta.setText("" + generarNumeroBoleta());
+    private void limpiarCampos() {        
         jTBuscarTicket.setText("");
         jTBuscarTicket.setEnabled(true);
         jTFecha.setText(dao.recuperarFecha());
@@ -146,8 +145,7 @@ public class AdminVenta extends javax.swing.JDialog {
                     System.out.println("saldo actualizado = " + saldo);
 
                     dao.ActualizarSaldo(saldo, ticket.getFk_codigo_emp());
-                }
-                limpiarCampos();
+                }                 
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo completar la operación", "error!", JOptionPane.ERROR_MESSAGE);
             }
@@ -747,6 +745,7 @@ public class AdminVenta extends javax.swing.JDialog {
     private void jBRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRealizarVentaActionPerformed
         realizarVenta();
         limpiarCampos();
+        jTNumeroBoleta.setText("" + generarNumeroBoleta());
     }//GEN-LAST:event_jBRealizarVentaActionPerformed
 
     private void jBQuitarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBQuitarProductoActionPerformed
