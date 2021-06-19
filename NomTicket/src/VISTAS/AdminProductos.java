@@ -103,12 +103,16 @@ public class AdminProductos extends javax.swing.JDialog {
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {
-            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar producto?");
+            String botones[] = {"Sí", "No"};
+            //int respuesta = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?");
+            int respuesta = JOptionPane.showOptionDialog(this, "¿Eliminar producto?", "Aviso", 0, 0, null, botones, this);
+            
+            
             if (respuesta == 0) {
                 if (dao.eliminar(""+p.getCodigo_producto()) > 0) {                    
-                    JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente","Exito!",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Producto eliminado exitosamente","Éxito!",JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, "error al eliminar producto", "error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error al eliminar producto", "Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -208,10 +212,10 @@ public class AdminProductos extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jBRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jBModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jBEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +252,7 @@ public class AdminProductos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Descripción", "Tipo", "Precio"
+                "Código", "Nombre", "Descripción", "Tipo", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -481,12 +485,10 @@ public class AdminProductos extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 8, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -537,7 +539,7 @@ public class AdminProductos extends javax.swing.JDialog {
     private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
         fila = tabla.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         }else{
             JDProd = new JDProducto(new javax.swing.JDialog(), true);
             JDProd.setModalidad(ProductosDAO.MODIFICAR);
@@ -568,7 +570,7 @@ public class AdminProductos extends javax.swing.JDialog {
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
         fila = tabla.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {            
             String codigo = tabla.getValueAt(fila, 0).toString(); 
             String nombre = tabla.getValueAt(fila, 1).toString();
@@ -602,7 +604,7 @@ public class AdminProductos extends javax.swing.JDialog {
 
     private void GuardarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarPDFActionPerformed
         if(infDao.GenerarInformeBasicoPDF(tabla, "Lista de Productos")==1){
-            JOptionPane.showMessageDialog(null, "Informe creado exitosamente","Exito!",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Informe creado exitosamente","Éxito!",JOptionPane.INFORMATION_MESSAGE);
         }else{
             JOptionPane.showMessageDialog(this, "Error al guardar PDF");
         }

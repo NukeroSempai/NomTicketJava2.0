@@ -63,10 +63,10 @@ public class JDCajero extends javax.swing.JDialog {
         jTextClave.setEnabled(false);
         cargarCombo();
         if (MODALIDAD == 0) {
-            jLabelModalidadEntrada.setText("Agregar Producto");
+            jLabelModalidadEntrada.setText("Agregar Cajero");
             jBConfirmar.setText("AGREGAR");
         } else {
-            jLabelModalidadEntrada.setText("Modificar Producto");
+            jLabelModalidadEntrada.setText("Modificar Cajero");
             jBConfirmar.setText("GUARDAR CAMBIOS");
         }
     }
@@ -100,7 +100,7 @@ public class JDCajero extends javax.swing.JDialog {
         if (dao.add(ob) > 0) {
             JOptionPane.showMessageDialog(null, "Cajero Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al agregar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al agregar Cajero", "Error!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -119,9 +119,9 @@ public class JDCajero extends javax.swing.JDialog {
         obj[4] = estado;
         obj[5] = c.getRut_cajero();
         if (dao.actualizar(obj) > 0) {
-            JOptionPane.showMessageDialog(null, "Cajero Actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Cajero actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al actualizar cajero", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -142,9 +142,9 @@ public class JDCajero extends javax.swing.JDialog {
         obj[4] = estado;
         obj[5] = c.getRut_cajero();               
         if (dao.actualizar(obj, clave) > 0) {
-            JOptionPane.showMessageDialog(null, "Cajero Actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Cajero actualizado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar Cajero", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al actualizar cajero", "Error!", JOptionPane.ERROR_MESSAGE);
         }
         
 
@@ -364,10 +364,10 @@ public class JDCajero extends javax.swing.JDialog {
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
         if(jTextRut.getText().length()!=10){
-            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
         }else{
             if (seg.verificarRUT(jTextRut.getText()) == false) {
-                JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (MODALIDAD == 0) {
                     Agregar();

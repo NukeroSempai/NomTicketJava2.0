@@ -305,7 +305,7 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="jBPerfil">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="PERFIL"/>
+                    <Property name="text" type="java.lang.String" value="INFORMACI&#xd3;N PERSONAL"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBPerfilActionPerformed"/>

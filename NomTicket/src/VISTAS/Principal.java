@@ -21,7 +21,7 @@ public class Principal extends javax.swing.JFrame {
         initComponents();
         inicializar();
     }
-    
+
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
         return retValue;
@@ -55,17 +55,17 @@ public class Principal extends javax.swing.JFrame {
         jBInformes.setVisible(estado);
     }
 
-    private void dibujarInterfaz() {        
+    private void dibujarInterfaz() {
         jLRut.setText(usuario.getRut_cajero());
         jLNombre.setText(usuario.getNombre());
         this.setEnabled(true);
         this.setVisible(true);
-        if(usuario.getAdministrador()==1){
+        if (usuario.getAdministrador() == 1) {
             SetOpcionesAdministrador(true);
         }
     }
-    
-    private void cambiarModulo(JDialog dialogo){
+
+    private void cambiarModulo(JDialog dialogo) {
         this.setEnabled(false);
         this.setVisible(false);
         dialogo.setLocationRelativeTo(this);
@@ -205,7 +205,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("OPCIONES");
 
-        jBPerfil.setText("PERFIL");
+        jBPerfil.setText("INFORMACIÓN PERSONAL");
         jBPerfil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBPerfilActionPerformed(evt);
@@ -344,41 +344,45 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalirActionPerformed
-        String botones[] = {"Si", "No"};
-        int eleccion = JOptionPane.showOptionDialog(this, "Desea cerrar la aplicación?", "Aviso", 0, 0, null, botones, this);
+        String botones[] = {"Sí", "No"};
+        int eleccion = JOptionPane.showOptionDialog(this, "¿Desea cerrar la aplicación?", "Aviso", 0, 0, null, botones, this);
         if (eleccion == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_jBSalirActionPerformed
 
     private void jBCerrarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarSesion1ActionPerformed
-        inicializar();
+        String botones[] = {"Sí", "No"};        
+        int respuesta = JOptionPane.showOptionDialog(this, "¿Cerrar sesión?", "Aviso", 0, 0, null, botones, this);
+        if(respuesta ==0){
+            inicializar();
+        }        
     }//GEN-LAST:event_jBCerrarSesion1ActionPerformed
 
     private void jBVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBVentasActionPerformed
-        AdminVenta adminVen = new AdminVenta(new javax.swing.JDialog(),true);
+        AdminVenta adminVen = new AdminVenta(new javax.swing.JDialog(), true);
         adminVen.setCajero(usuario);
         cambiarModulo(adminVen);
     }//GEN-LAST:event_jBVentasActionPerformed
 
     private void jBProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBProductosActionPerformed
-        AdminProductos adminProd = new AdminProductos(new javax.swing.JDialog(),true);
+        AdminProductos adminProd = new AdminProductos(new javax.swing.JDialog(), true);
         cambiarModulo(adminProd);
-        
+
     }//GEN-LAST:event_jBProductosActionPerformed
 
     private void jBUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBUsuariosActionPerformed
-        AdminCajero adminCaja = new AdminCajero(new javax.swing.JDialog(),true);
+        AdminCajero adminCaja = new AdminCajero(new javax.swing.JDialog(), true);
         cambiarModulo(adminCaja);
     }//GEN-LAST:event_jBUsuariosActionPerformed
 
     private void jBInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBInformesActionPerformed
-        AdminInformes adminInfo = new AdminInformes(new javax.swing.JDialog(),true);
+        AdminInformes adminInfo = new AdminInformes(new javax.swing.JDialog(), true);
         cambiarModulo(adminInfo);
     }//GEN-LAST:event_jBInformesActionPerformed
 
     private void jBPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPerfilActionPerformed
-        JDPerfil jPerfil = new JDPerfil(new javax.swing.JDialog(),true);
+        JDPerfil jPerfil = new JDPerfil(new javax.swing.JDialog(), true);
         jPerfil.setCajero(usuario);
         cambiarModulo(jPerfil);
     }//GEN-LAST:event_jBPerfilActionPerformed

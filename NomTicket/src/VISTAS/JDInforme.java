@@ -1,31 +1,16 @@
 package VISTAS;
 
 import CONTROLADOR.InformesDAO;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
-import MODELOS.PRODUCTO;
-import CONTROLADOR.ProductosDAO;
 import MODELOS.INFORME_TICKET;
-import com.toedter.calendar.IDateEvaluator;
-import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -177,9 +162,9 @@ public class JDInforme extends javax.swing.JDialog {
     private void guardarPDF(javax.swing.JPanel panel, javax.swing.JTable tabla, String titulo) {
         JFreeChart graf = recuperarGrafico(panel);        
         if (dao.GenerarInformeCompletoPDF(tabla, graf, titulo) > 0) {
-            JOptionPane.showMessageDialog(null, "Informe Guardado Correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Informe guardado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al guardar Informe", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al guardar informe", "Error!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -197,9 +182,9 @@ public class JDInforme extends javax.swing.JDialog {
         ob[3] = Integer.parseInt(jTCantidadTickets.getText());
         ob[4] = Integer.parseInt(jTTotalVentas.getText());
         if (dao.add(ob) > 0) {
-            JOptionPane.showMessageDialog(null, "Informe Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Informe agregado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al guardar Informe", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al guardar informe", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -371,9 +356,9 @@ public class JDInforme extends javax.swing.JDialog {
                     .addComponent(jLRut9))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTCantidadTickets, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLRut10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLRut10)
+                    .addComponent(jTCantidadTickets, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLRut11)
                     .addComponent(jTTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -908,7 +893,7 @@ public class JDInforme extends javax.swing.JDialog {
             jPanelGuardarInformeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelGuardarInformeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jBGuardarInforme, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addComponent(jBGuardarInforme, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelGuardarInformeLayout.setVerticalGroup(
@@ -985,7 +970,7 @@ public class JDInforme extends javax.swing.JDialog {
 
     private void jBCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarDatosActionPerformed
         if (jDRangoInicio.getDate() == null || jDRangoTermino.getDate() == null) {
-            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fecha");
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha");
         } else {
             //es necesario ejecutar la limpieza de tablas 2 veces, desconozco el motivo tecnido del "POR QUE!?"
             if (TablaServicio.getRowCount() != 0) {

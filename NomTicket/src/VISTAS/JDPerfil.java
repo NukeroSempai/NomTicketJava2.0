@@ -3,13 +3,8 @@ package VISTAS;
 import CONTROLADOR.CajerosDAO;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import MODELOS.EVENTOS;
-import MODELOS.PRODUCTO;
-import CONTROLADOR.ProductosDAO;
 import MODELOS.CAJERO;
 import SEGURIDAD.Seguridad;
 
@@ -59,9 +54,9 @@ public class JDPerfil extends javax.swing.JDialog {
         obj[1] = nombre_caj;
         obj[2] = c.getRut_cajero();
         if (dao.actualizarPerfil(obj) > 0) {
-            JOptionPane.showMessageDialog(null, "Datos Actualizados correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Datos actualizados correctamente", "Éxito!", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar los Datos", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al actualizar los datos", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -76,9 +71,9 @@ public class JDPerfil extends javax.swing.JDialog {
         obj[1] = nombre_caj;
         obj[2] = c.getRut_cajero();
         if (dao.actualizarPerfil(obj, clave) > 0) {
-            JOptionPane.showMessageDialog(null, "Datos Actualizados correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Datos actualizados correctamente", "Éxito!", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar los Datos", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al actualizar los datos", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -111,7 +106,7 @@ public class JDPerfil extends javax.swing.JDialog {
 
         jLabelModalidadEntrada.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabelModalidadEntrada.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelModalidadEntrada.setText("Editar Perfil");
+        jLabelModalidadEntrada.setText("Información Personal");
 
         jLRut1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLRut1.setText("Rut");
@@ -272,10 +267,10 @@ public class JDPerfil extends javax.swing.JDialog {
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
         if(jTextRut.getText().length()!=10){
-            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
         }else{
             if (seg.verificarRUT(jTextRut.getText()) == false) {
-                JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (jTextClave1.getPassword().length != 0 && jTextClave2.getPassword().length != 0) {
                     String clave1 = "";
@@ -290,7 +285,7 @@ public class JDPerfil extends javax.swing.JDialog {
                         Actualizar(clave1);
                         this.dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     Actualizar();

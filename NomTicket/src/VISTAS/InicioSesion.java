@@ -153,11 +153,11 @@ public class InicioSesion extends javax.swing.JDialog {
     private void jBtnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnConectarActionPerformed
         
         if(jTextRUT.getText().length()!=10){
-            JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
         }else{
             //verificar rut
             if(seg.verificarRUT(jTextRUT.getText())==false){
-                JOptionPane.showMessageDialog(null, "ERROR RUT NO VALIDO!", "error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
             }else{
                 //verificar clave
                 String ingresoClave = "";
@@ -165,7 +165,7 @@ public class InicioSesion extends javax.swing.JDialog {
                     ingresoClave += jTextCLAVE.getPassword()[i];
                 }
                 if (seg.iniciarSesion(jTextRUT.getText(), ingresoClave) == true) {
-                    JOptionPane.showMessageDialog(null, "Bienvenido!", "Exito!", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Bienvenido!", "Éxito!", JOptionPane.INFORMATION_MESSAGE);
                     if (usu.VerificarSuperUsuario(jTextRUT.getText())) {
                         System.out.println("es admin");
                         this.dispose();
@@ -174,7 +174,7 @@ public class InicioSesion extends javax.swing.JDialog {
                         this.dispose();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "ERROR de inicio de sesión", "error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "ERROR de inicio de sesión", "Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }            
         }        

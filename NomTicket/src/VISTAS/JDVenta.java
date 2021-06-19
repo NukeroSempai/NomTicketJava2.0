@@ -176,7 +176,7 @@ public class JDVenta extends javax.swing.JDialog {
         jLabelModalidadEntrada.setText("Seleccionar Productos");
 
         jLRut1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut1.setText("Codigo Producto");
+        jLRut1.setText("Código Producto");
 
         jTexCodigoProducto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -319,13 +319,15 @@ public class JDVenta extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLRut7))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLRut7)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jComboCategoria, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jBFiltrar1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jBFiltrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBFiltrar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,7 +348,7 @@ public class JDVenta extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Descripción", "Tipo", "Precio"
+                "Código", "Nombre", "Descripción", "Tipo", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -423,7 +425,7 @@ public class JDVenta extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo Producto", "Nombre", "Cantidad", "Sub-Total"
+                "Código Producto", "Nombre", "Cantidad", "Sub-Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -464,7 +466,7 @@ public class JDVenta extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -531,7 +533,7 @@ public class JDVenta extends javax.swing.JDialog {
 
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         if(JTCantidad.getValue().toString().equals("0")){
-            JOptionPane.showMessageDialog(null, "cantidad debe ser mayor a 0", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor a 0", "Error!", JOptionPane.ERROR_MESSAGE);
         }else{
             int codigo = cod_prod;
             String nombre = jTexProducto.getText();
@@ -555,7 +557,7 @@ public class JDVenta extends javax.swing.JDialog {
     private void jTableProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableProductosMouseClicked
         fila = jTableProductos.getSelectedRow();
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this, "Debe Seleccionar una Fila");
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {            
             cod_prod = Integer.parseInt(jTableProductos.getValueAt(fila, 0).toString()); 
             String nombre = jTableProductos.getValueAt(fila, 1).toString();            
@@ -591,7 +593,9 @@ public class JDVenta extends javax.swing.JDialog {
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {
-            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar producto?");
+            String botones[] = {"Sí", "No"};
+            //int respuesta = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?");
+            int respuesta = JOptionPane.showOptionDialog(this, "¿Eliminar producto?", "Aviso", 0, 0, null, botones, this);
             if (respuesta == 0) {
                 pedido.removeRow(fila);                
             }

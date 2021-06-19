@@ -57,10 +57,10 @@ public class JDProducto extends javax.swing.JDialog {
     private void inicializar() {
         cargarCombo();
         if (MODALIDAD == 0) {
-            jLabelModalidadEntrada.setText("Agregar Producto");
+            jLabelModalidadEntrada.setText("Agregar producto");
             jBConfirmar.setText("AGREGAR");
         } else {
-            jLabelModalidadEntrada.setText("Modificar Producto");
+            jLabelModalidadEntrada.setText("Modificar producto");
             jBConfirmar.setText("GUARDAR CAMBIOS");
         }
     }
@@ -86,9 +86,9 @@ public class JDProducto extends javax.swing.JDialog {
         System.out.println(ob[2]);
         System.out.println(ob[3]);
         if (dao.add(ob) > 0) {
-            JOptionPane.showMessageDialog(null, "Producto Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Producto agregado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al agregar producto", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al agregar producto", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -106,9 +106,9 @@ public class JDProducto extends javax.swing.JDialog {
         obj[4] = precio_prod;
         obj[5] = p.getCodigo_producto();
         if (dao.actualizar(obj) > 0) {
-            JOptionPane.showMessageDialog(null, "Producto Actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showMessageDialog(null, "Producto actualizado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
-            JOptionPane.showMessageDialog(null, "error al Actualizar producto", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al actualizar producto", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }
@@ -161,7 +161,7 @@ public class JDProducto extends javax.swing.JDialog {
         });
 
         jLRut3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLRut3.setText("Categoria");
+        jLRut3.setText("Categoría");
 
         jTextPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -299,7 +299,7 @@ public class JDProducto extends javax.swing.JDialog {
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
         if (Integer.parseInt(jTextPrecio.getText()) == 0) {
-            int respuesta = JOptionPane.showConfirmDialog(null, "El precio del producto es 0, Esto es correcto?");
+            int respuesta = JOptionPane.showConfirmDialog(null, "El precio del producto es 0, ¿Esto es correcto?");
             if (respuesta == 0) {
                 if (MODALIDAD == 0) {
                     Agregar();

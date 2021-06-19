@@ -96,7 +96,7 @@ public class AdminVenta extends javax.swing.JDialog {
         }
     }
 
-    private void limpiarCampos() {        
+    private void limpiarCampos() {
         jTBuscarTicket.setText("");
         jTBuscarTicket.setEnabled(true);
         jTFecha.setText(dao.recuperarFecha());
@@ -123,7 +123,7 @@ public class AdminVenta extends javax.swing.JDialog {
         String rCajero = cajero.getRut_cajero();
         Integer nBoleta = Integer.parseInt(jTNumeroBoleta.getText());
         if (vTotal == 0 && vTicket == 0 && SxPagar == 0) {
-            JOptionPane.showMessageDialog(null, "Debe Agregar Productos", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Debe agregar productos", "Error!", JOptionPane.ERROR_MESSAGE);
         } else {
             Object[] boleta = new Object[7];
             boleta[0] = nBoleta;
@@ -135,19 +135,19 @@ public class AdminVenta extends javax.swing.JDialog {
             boleta[6] = rCajero;
             if (dao.add(boleta) > 0) {
                 guardarDetalle();
-                JOptionPane.showMessageDialog(null, "Venta exitosa", "Exito!", JOptionPane.DEFAULT_OPTION);
+                JOptionPane.showMessageDialog(null, "Venta exitosa", "Éxito!", JOptionPane.DEFAULT_OPTION);
                 if (cTicket != null) {
                     dao.DeshabilitarTicket(cTicket);
                     int saldo = dao.RecuperarSaldo(ticket.getFk_codigo_emp());
                     System.out.println(ticket.getFk_codigo_emp());
                     System.out.println("saldo actual = " + saldo);
                     saldo = saldo - vTicket;
-                    System.out.println("saldo actualizado = " + saldo);
+                    System.out.println("Saldo actualizado = " + saldo);
 
                     dao.ActualizarSaldo(saldo, ticket.getFk_codigo_emp());
-                }                 
+                }
             } else {
-                JOptionPane.showMessageDialog(null, "No se pudo completar la operación", "error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No se pudo completar la operación", "Error!", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -326,7 +326,7 @@ public class AdminVenta extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Cantidad", "Sub Total"
+                "Código", "Nombre", "Cantidad", "Sub Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -387,8 +387,8 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut1)
                 .addGap(18, 18, 18)
-                .addComponent(jTNumeroBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTNumeroBoleta, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLRut2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -432,9 +432,9 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTBuscarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(jBCargarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTBuscarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBCargarTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
@@ -461,8 +461,8 @@ public class AdminVenta extends javax.swing.JDialog {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jBVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jBVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -499,9 +499,9 @@ public class AdminVenta extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLRut10)
                 .addGap(18, 18, 18)
-                .addComponent(jBSeleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jBQuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jBSeleccionarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBQuitarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
@@ -753,7 +753,9 @@ public class AdminVenta extends javax.swing.JDialog {
         if (fila == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una fila");
         } else {
-            int respuesta = JOptionPane.showConfirmDialog(null, "Eliminar producto?");
+            String botones[] = {"Sí", "No"};
+            //int respuesta = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?");
+            int respuesta = JOptionPane.showOptionDialog(this, "¿Eliminar producto?", "Aviso", 0, 0, null, botones, this);
             if (respuesta == 0) {
                 modelo.removeRow(fila);
                 calcularTotal();
@@ -763,15 +765,15 @@ public class AdminVenta extends javax.swing.JDialog {
 
     private void jBCargarTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCargarTicketActionPerformed
         if (!jTBuscarTicket.getText().equals("")) {
-            ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));            
+            ticket = dao.cargarTicket(Integer.parseInt(jTBuscarTicket.getText()));
             if (ticket.getEstado() != 1) {
                 System.out.println("ticket no habilitado");
-                JOptionPane.showMessageDialog(null, "Ticket no Valido", "error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ticket no válido", "Error!", JOptionPane.ERROR_MESSAGE);
                 jLDescuento.setText("0");
             } else {
                 jLDescuento.setText("" + ticket.getValor());
                 if (tabla.getRowCount() > 0) {
-                    int respuesta = JOptionPane.showConfirmDialog(null, "Mantener pedido de productos?");
+                    int respuesta = JOptionPane.showConfirmDialog(null, "¿Mantener pedido de productos?");
                     if (respuesta == 0) {
                         listar();
                         calcularTotal();
@@ -791,7 +793,7 @@ public class AdminVenta extends javax.swing.JDialog {
 
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Debe ingresar un codigo", "error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Debe ingresar un código", "Error!", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jBCargarTicketActionPerformed

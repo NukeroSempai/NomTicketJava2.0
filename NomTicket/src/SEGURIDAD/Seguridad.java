@@ -71,7 +71,7 @@ public class Seguridad {
         if ((usuarioRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 1) {
             autorizar = true;
         }
-        if (activo == 0) {
+        if ((usuarioRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 0) {
             JOptionPane.showMessageDialog(null, "Usuario Deshabilitado", "error!", JOptionPane.ERROR_MESSAGE);
         }
         return autorizar;
