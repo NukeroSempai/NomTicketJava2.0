@@ -9,6 +9,8 @@ import MODELOS.INFORME_TICKET;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -34,6 +36,7 @@ public class JDInforme extends javax.swing.JDialog {
     private DefaultTableModel modeloProducto = new DefaultTableModel();
     private DefaultTableModel modeloVenta = new DefaultTableModel();
     private DefaultTableModel modeloTicket = new DefaultTableModel();
+    private DefaultTableModel modeloTicketEmpleado = new DefaultTableModel();
 
     public JDInforme(javax.swing.JDialog parent, boolean modal) {
         super(parent, modal);
@@ -52,9 +55,9 @@ public class JDInforme extends javax.swing.JDialog {
         this.p = informe;
     }
 
-    private void inicializar() {        
-        jDRangoInicio.setDateFormatString("yyyy-MM-dd");        
-        jDRangoTermino.setDateFormatString("yyyy-MM-dd");
+    private void inicializar() {
+        jDRangoInicio.setDateFormatString("dd-MM-yyyy");
+        jDRangoTermino.setDateFormatString("dd-MM-yyyy");
         if (MODALIDAD == 0) {//modo agregar informe            
             jLabelTituloInforme1.setText("Generar Informe");
         } else {//modo abrir informe
@@ -80,6 +83,9 @@ public class JDInforme extends javax.swing.JDialog {
             //cargar tabla ticket
             cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloTicket, TablaTicket, InformesDAO.TICKET);
             GraficarTabla(TablaTicket, "Tickets", JPanelGraficoTicket);
+            //carta tabla tickets x empleados
+            CentrarTabla(TablaTicketEmpleado);
+            cargarTablaTicketEmpleado(p.getRango_inicio(), p.getRango_termino(), modeloTicketEmpleado, TablaTicketEmpleado);
         }
 
     }
@@ -149,6 +155,21 @@ public class JDInforme extends javax.swing.JDialog {
         tabla.setModel(modelo);
     }
 
+    private void cargarTablaTicketEmpleado(java.sql.Date rangoInicio, java.sql.Date rangoTermino, DefaultTableModel modelo, javax.swing.JTable tabla) {
+        List<Object[]> lista = dao.generarResumenTicketEmpleado(rangoInicio, rangoTermino);
+        modelo = (DefaultTableModel) tabla.getModel();
+        Object[] ob = new Object[5];
+        for (int i = 0; i < lista.size(); i++) {
+            ob[0] = lista.get(i)[0];
+            ob[1] = lista.get(i)[1];
+            ob[2] = lista.get(i)[2];
+            ob[3] = lista.get(i)[3];
+            ob[4] = lista.get(i)[4];
+            modelo.addRow(ob);
+        }
+        tabla.setModel(modelo);
+    }
+
     private void cargarResumen() {
         List<Object[]> lista = dao.generarResumen(p.getRango_inicio(), p.getRango_termino());
 
@@ -160,7 +181,7 @@ public class JDInforme extends javax.swing.JDialog {
     }
 
     private void guardarPDF(javax.swing.JPanel panel, javax.swing.JTable tabla, String titulo) {
-        JFreeChart graf = recuperarGrafico(panel);        
+        JFreeChart graf = recuperarGrafico(panel);
         if (dao.GenerarInformeCompletoPDF(tabla, graf, titulo) > 0) {
             JOptionPane.showMessageDialog(null, "Informe guardado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
@@ -171,6 +192,12 @@ public class JDInforme extends javax.swing.JDialog {
     private JFreeChart recuperarGrafico(javax.swing.JPanel panelGrafico) {
         ChartPanel componente = (ChartPanel) panelGrafico.getComponent(0);
         return componente.getChart();
+    }
+
+    private void CentrarTabla(javax.swing.JTable tabla) {
+        DefaultTableCellRenderer Alinear = new DefaultTableCellRenderer();
+        Alinear.setHorizontalAlignment(SwingConstants.LEFT);
+        tabla.getColumnModel().getColumn(1).setCellRenderer(Alinear);
     }
 
     private void Agregar() {
@@ -245,6 +272,11 @@ public class JDInforme extends javax.swing.JDialog {
         jScrollPane3 = new javax.swing.JScrollPane();
         TablaVentas = new javax.swing.JTable();
         jBGuardarVentasPDF = new javax.swing.JButton();
+        jPanel18 = new javax.swing.JPanel();
+        jPanel20 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        TablaTicketEmpleado = new javax.swing.JTable();
+        jBGuardarVentasPDF1 = new javax.swing.JButton();
         jPanelGuardarInforme = new javax.swing.JPanel();
         jBGuardarInforme = new javax.swing.JButton();
 
@@ -862,6 +894,85 @@ public class JDInforme extends javax.swing.JDialog {
 
         jTabbedPane5.addTab("Ventas", jPanel6);
 
+        jPanel18.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel18.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+
+        TablaTicketEmpleado.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Rut", "Nombre", "Turno", "Tickets", "Monto"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TablaTicketEmpleado.setFocusable(false);
+        jScrollPane5.setViewportView(TablaTicketEmpleado);
+
+        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        jPanel20.setLayout(jPanel20Layout);
+        jPanel20Layout.setHorizontalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 727, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel20Layout.setVerticalGroup(
+            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel20Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jBGuardarVentasPDF1.setText("GUARDAR EN PDF");
+        jBGuardarVentasPDF1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jBGuardarVentasPDF1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGuardarVentasPDF1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
+        jPanel18.setLayout(jPanel18Layout);
+        jPanel18Layout.setHorizontalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addGap(408, 408, 408)
+                .addComponent(jBGuardarVentasPDF1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel18Layout.setVerticalGroup(
+            jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel18Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jBGuardarVentasPDF1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane5.addTab("Tickets Por Empleados", jPanel18);
+
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
@@ -994,6 +1105,10 @@ public class JDInforme extends javax.swing.JDialog {
                 //cargar tabla ticket
                 cargarTabla(p.getRango_inicio(), p.getRango_termino(), modeloTicket, TablaTicket, InformesDAO.TICKET);
                 GraficarTabla(TablaTicket, "Tickets", JPanelGraficoTicket);
+                //carta tabla tickets x empleados
+                CentrarTabla(TablaTicketEmpleado);
+                cargarTablaTicketEmpleado(p.getRango_inicio(), p.getRango_termino(), modeloTicketEmpleado, TablaTicketEmpleado);
+                
             }
         }
     }//GEN-LAST:event_jBCargarDatosActionPerformed
@@ -1004,20 +1119,28 @@ public class JDInforme extends javax.swing.JDialog {
     }//GEN-LAST:event_jBGuardarInformeActionPerformed
 
     private void jBGuardarServicioPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarServicioPDFActionPerformed
-        guardarPDF(JPanelGraficoServicio,TablaServicio,"Informe Servicio");
+        guardarPDF(JPanelGraficoServicio, TablaServicio, "Informe Servicio");
     }//GEN-LAST:event_jBGuardarServicioPDFActionPerformed
 
     private void jBGuardarProductoPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarProductoPDFActionPerformed
-        guardarPDF(JPanelGraficoProductos,TablaProductos,"Informe Productos");
+        guardarPDF(JPanelGraficoProductos, TablaProductos, "Informe Productos");
     }//GEN-LAST:event_jBGuardarProductoPDFActionPerformed
 
     private void jBGuardarTicketPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarTicketPDFActionPerformed
-        guardarPDF(JPanelGraficoTicket,TablaTicket,"Informe Tickets");
+        guardarPDF(JPanelGraficoTicket, TablaTicket, "Informe Tickets");
     }//GEN-LAST:event_jBGuardarTicketPDFActionPerformed
 
     private void jBGuardarVentasPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarVentasPDFActionPerformed
-        guardarPDF(JPanelGraficoVentas,TablaVentas,"Informe Ventas");
+        guardarPDF(JPanelGraficoVentas, TablaVentas, "Informe Ventas");
     }//GEN-LAST:event_jBGuardarVentasPDFActionPerformed
+
+    private void jBGuardarVentasPDF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGuardarVentasPDF1ActionPerformed
+        if (dao.GenerarInformeBasicoPDF(TablaTicketEmpleado, "Tickets por Empleados") == 1) {
+            JOptionPane.showMessageDialog(null, "Informe creado exitosamente", "Éxito!", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al guardar PDF");
+        }
+    }//GEN-LAST:event_jBGuardarVentasPDF1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1072,6 +1195,7 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JTable TablaProductos;
     private javax.swing.JTable TablaServicio;
     private javax.swing.JTable TablaTicket;
+    private javax.swing.JTable TablaTicketEmpleado;
     private javax.swing.JTable TablaVentas;
     private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBCargarDatos;
@@ -1080,6 +1204,7 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JButton jBGuardarServicioPDF;
     private javax.swing.JButton jBGuardarTicketPDF;
     private javax.swing.JButton jBGuardarVentasPDF;
+    private javax.swing.JButton jBGuardarVentasPDF1;
     private com.toedter.calendar.JDateChooser jDRangoInicio;
     private com.toedter.calendar.JDateChooser jDRangoTermino;
     private javax.swing.JLabel jLRut10;
@@ -1102,7 +1227,9 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
+    private javax.swing.JPanel jPanel18;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -1115,6 +1242,7 @@ public class JDInforme extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextField jTCantidadBoletas;
     private javax.swing.JTextField jTCantidadTickets;
     private javax.swing.JTextField jTTotalVentas;

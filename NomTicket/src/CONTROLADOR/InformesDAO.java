@@ -50,8 +50,8 @@ public class InformesDAO implements CRUD {
     public static final int TICKET = 3;
 
     //metodos personalizados
-    private void RegistrarError(String modulo,String mensaje) {
-        System.out.println("error packete "+ modulo +" error : =  " + mensaje);
+    private void RegistrarError(String modulo, String mensaje) {
+        System.out.println("error packete " + modulo + " error : =  " + mensaje);
         Object[] O = new Object[4];
         O[2] = modulo;
         O[3] = mensaje;
@@ -59,8 +59,6 @@ public class InformesDAO implements CRUD {
     }
 
     //reparar para que traiga el objeto
-    
-
     public INFORME_TICKET listarCodigo(int codigo) {
         INFORME_TICKET inf = new INFORME_TICKET();
         String sql = "select * from INFORME_TICKET where correlativo_inf=?";
@@ -80,7 +78,7 @@ public class InformesDAO implements CRUD {
                 inf.setTipo_informe(rs.getString("tipo_informe"));
             }
             con.close();
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.ListarCodigo()", e.getMessage());
 
         }
@@ -110,11 +108,12 @@ public class InformesDAO implements CRUD {
             }
             con.close();
 
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.Listar()", e.getMessage());
         }
         return lista;
     }
+
     //sobrecarga de metodo
     public List listar(Date fecha) {
         List<INFORME_TICKET> lista = new ArrayList<>();
@@ -138,23 +137,53 @@ public class InformesDAO implements CRUD {
             }
             con.close();
 
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.Listar(Date Fecha)", e.getMessage());
         }
         return lista;
     }
-    
-    public List generarResumen(Date rangoInicio,Date rangoTermino){
+
+    public List generarResumenTicketEmpleado(Date rangoInicio, Date rangoTermino) {
         List<Object[]> lista = new ArrayList<>();
-        String sql ="select count(num_boleta),count(fk_codigo_ticket_id),sum(valor_total) from boleta where trunc(fecha_boleta) BETWEEN trunc(?) and trunc(?)";
+        String sql = "select emp.rut_emp ,emp.nom_emp||' '||emp.appaterno_emp||' '||emp.apmaterno_emp ,"
+                + "tur.nombre ,count(tic.fk_codigo_emp_id),SUM(tic.valor)"
+                + "from empleado emp join turno tur on tur.id_turno = emp.fk_turno_id join ticket tic on tic.fk_codigo_emp_id = emp.codigo_emp where emp.codigo_emp in (select fk_codigo_emp_id from ticket where fecha_imp BETWEEN trunc(?)and trunc(?))"
+                + "and tic.estado=0"
+                + "group by emp.rut_emp,emp.nom_emp,emp.appaterno_emp,emp.apmaterno_emp,tur.nombre";
         try {
-            
+
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
             ps.setDate(1, rangoInicio);
             ps.setDate(2, rangoTermino);
             rs = ps.executeQuery();
-            while (rs.next()) {                
+            while (rs.next()) {
+                Object[] ob = new Object[5];
+                ob[0] = rs.getString(1);
+                ob[1] = rs.getString(2);
+                ob[2] = rs.getString(3);
+                ob[3] = rs.getInt(4);
+                ob[4] = rs.getInt(5);
+                lista.add(ob);
+            }
+            con.close();
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.InformesDAO.generarResumenTicketEmpleado(Date rangoInicio,Date rangoTermino)", e.getMessage());
+        }
+        return lista;
+    }
+
+    public List generarResumen(Date rangoInicio, Date rangoTermino) {
+        List<Object[]> lista = new ArrayList<>();
+        String sql = "select count(num_boleta),count(fk_codigo_ticket_id),sum(valor_total) from boleta where trunc(fecha_boleta) BETWEEN trunc(?) and trunc(?)";
+        try {
+
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setDate(1, rangoInicio);
+            ps.setDate(2, rangoTermino);
+            rs = ps.executeQuery();
+            while (rs.next()) {
                 Object[] ob = new Object[3];
                 ob[0] = rs.getInt(1);
                 ob[1] = rs.getInt(2);
@@ -162,53 +191,52 @@ public class InformesDAO implements CRUD {
                 lista.add(ob);
             }
             con.close();
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.generarResumen(Date rangoInicio,Date rangoTermino)", e.getMessage());
         }
         return lista;
-    }   
-    
-    public List ContarServicios(Date rangoInicio,Date rangoTermino,int Modalidad){
-        String contador ="";
-        if(Modalidad == 0){
+    }
+
+    public List ContarServicios(Date rangoInicio, Date rangoTermino, int Modalidad) {
+        String contador = "";
+        if (Modalidad == 0) {
             contador = "tpr.nom_tipo_producto";
         }
-        if(Modalidad == 1){
+        if (Modalidad == 1) {
             contador = "pro.nom_producto";
         }
-        
+
         List<Object[]> lista = new ArrayList<>();
-        String sql = "select "+ contador +",count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id" +
-"                                                                            where dtb.fk_num_boleta_id in (" +
-"                                                                            select num_boleta from boleta where fecha_boleta BETWEEN trunc(?) and trunc(?)+1" +
-"                                                                            )group by " + contador;
-        if(Modalidad ==2){
-            sql ="select to_char(fecha_boleta,'dd/MM/yyyy'),count(trunc(fecha_boleta)) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
+        String sql = "select " + contador + ",count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id"
+                + "                                                                            where dtb.fk_num_boleta_id in ("
+                + "                                                                            select num_boleta from boleta where fecha_boleta BETWEEN trunc(?) and trunc(?)+1"
+                + "                                                                            )group by " + contador;
+        if (Modalidad == 2) {
+            sql = "select to_char(fecha_boleta,'dd/MM/yyyy'),count(trunc(fecha_boleta)) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
         }
-        
-        if(Modalidad ==3){
-            sql ="select to_char(fecha_boleta,'dd/MM/yyyy'),count(fk_codigo_ticket_id) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
+
+        if (Modalidad == 3) {
+            sql = "select to_char(fecha_boleta,'dd/MM/yyyy'),count(fk_codigo_ticket_id) from boleta where fecha_boleta BETWEEN trunc(?) and trunc(? + 1)group by to_char(fecha_boleta,'dd/MM/yyyy') order by 1";
         }
         try {
-            
+
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
             ps.setDate(1, rangoInicio);
             ps.setDate(2, rangoTermino);
             rs = ps.executeQuery();
-            while (rs.next()) {                
+            while (rs.next()) {
                 Object[] ob = new Object[2];
                 ob[0] = rs.getString(1);
-                ob[1] = rs.getInt(2);                
+                ob[1] = rs.getInt(2);
                 lista.add(ob);
             }
             con.close();
-            
 
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.ContarServicios(Date rangoInicio,Date rangoTermino)", e.getMessage());
         }
-        return lista;        
+        return lista;
     }
 
     @Override
@@ -224,122 +252,60 @@ public class InformesDAO implements CRUD {
             ps.setObject(3, o[2]);//Cant_boletas
             ps.setObject(4, o[3]);//Cant_tickets
             ps.setObject(5, o[4]);//total_ventas            
-            
+
             r = ps.executeUpdate();
             con.close();
-        } catch (Exception e) {            
+        } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.add()", e.getMessage().toString());
         }
         return r;
     }
-    
-    private String TituloModalidad(int modalidad){
-        String titulo ="";
-        if(modalidad == SERVICIOS){
-            titulo="Servicio";
+
+    private String TituloModalidad(int modalidad) {
+        String titulo = "";
+        if (modalidad == SERVICIOS) {
+            titulo = "Servicio";
         }
-        if(modalidad == PRODUCTOS){
-            titulo="Productos";
+        if (modalidad == PRODUCTOS) {
+            titulo = "Productos";
         }
-        if(modalidad == VENTAS){
+        if (modalidad == VENTAS) {
             titulo = "Ventas";
         }
-        if(modalidad == TICKET){
+        if (modalidad == TICKET) {
             titulo = "Tickets";
         }
         return titulo;
     }
-    
-    public int GenerarInformeBasicoPDF(javax.swing.JTable tabla,String titulo){
+
+    public int GenerarInformeBasicoPDF(javax.swing.JTable tabla, String titulo) {
         int r = 0;
         Document documento = new Document();
         try {
             String ruta = System.getProperty("user.home");
             //ir a escritorio + nombre de archivo
             java.util.Date fecha = new java.util.Date();
-            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha)+".pdf"));
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha) + ".pdf"));
             //abrir documento pdf
             documento.open();
             //Generar Encabezado
             Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
-            logo.scaleToFit(80,80);
-            logo.setAlignment(Chunk.ALIGN_LEFT);            
+            logo.scaleToFit(80, 80);
+            logo.setAlignment(Chunk.ALIGN_LEFT);
             Paragraph fechaInforme = new Paragraph();
             fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
             fechaInforme.add(Chunk.NEWLINE);
-            fechaInforme.setFont(FontFactory.getFont("Tahoma",12,Font.BOLD,BaseColor.DARK_GRAY));
-            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");            
+            fechaInforme.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
+            fechaInforme.add("Fecha: " + new SimpleDateFormat("dd-MM-yyyy").format(fecha) + "\n\n");
             Paragraph tituloInforme = new Paragraph();
             tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
             tituloInforme.add(Chunk.NEWLINE);
-            tituloInforme.setFont(FontFactory.getFont("Tahoma",24,Font.BOLD,BaseColor.DARK_GRAY));
-            tituloInforme.add(titulo+"\n\n\n");
+            tituloInforme.setFont(FontFactory.getFont("Tahoma", 24, Font.BOLD, BaseColor.DARK_GRAY));
+            tituloInforme.add(titulo + "\n\n\n");
             //crear tabla para encabezado
             PdfPTable encPdf = new PdfPTable(3);
             encPdf.setWidthPercentage(100);
-            encPdf.setWidths(new float[]{20,75,30});            
-            encPdf.getDefaultCell().setBorder(0);
-            encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
-            //agregar imagen
-            encPdf.addCell(logo);
-            encPdf.addCell("");
-            encPdf.addCell(fechaInforme);
-            //agregar imagen y encabezado a documento            
-            documento.add(encPdf);
-            documento.add(tituloInforme);            
-            //algoritmo que crea numero de columnas en automatico
-            PdfPTable tablaPdf = new PdfPTable(tabla.getColumnCount());
-            tablaPdf.setWidthPercentage(100);
-            tablaPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
-            //escribir nombre de columnas en pdf
-            for (int i = 0; i < tabla.getColumnCount(); i++){
-                tablaPdf.addCell(tabla.getColumnName(i));
-            }
-            //escribir datos de la tabla al pdf
-            for (int i = 0; i < tabla.getRowCount(); i++) {
-                for (int j = 0; j < tabla.getColumnCount(); j++) {                    
-                    tablaPdf.addCell(tabla.getModel().getValueAt(i,j).toString());                    
-                }                
-            }            
-            documento.add(tablaPdf);
-            //cerrar documento
-            documento.close();
-            r=1;
-        } catch (Exception e) {
-            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformeBasicoPDF(javax.swing.JTtable tabla, String titulo)", e.getMessage().toString());
-        }
-        return r;
-    }
-    
-    public int GenerarInformeCompletoPDF(javax.swing.JTable tabla,JFreeChart grafico,String titulo){
-        int r = 0;
-        Document documento = new Document();
-        
-        try {
-            String ruta = System.getProperty("user.home");
-            //ir a escritorio + nombre de archivo
-            java.util.Date fecha = new java.util.Date();
-            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha)+".pdf"));
-            //abrir documento pdf
-            documento.open();
-            //Generar Encabezado
-            Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
-            logo.scaleToFit(80,80);
-            logo.setAlignment(Chunk.ALIGN_LEFT);            
-            Paragraph fechaInforme = new Paragraph();
-            fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
-            fechaInforme.add(Chunk.NEWLINE);
-            fechaInforme.setFont(FontFactory.getFont("Tahoma",12,Font.BOLD,BaseColor.DARK_GRAY));
-            fechaInforme.add("Fecha: "+ new SimpleDateFormat("dd-MM-yyyy").format(fecha)+"\n\n");            
-            Paragraph tituloInforme = new Paragraph();
-            tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
-            tituloInforme.add(Chunk.NEWLINE);
-            tituloInforme.setFont(FontFactory.getFont("Tahoma",24,Font.BOLD,BaseColor.DARK_GRAY));
-            tituloInforme.add(titulo+"\n\n\n");
-            //crear tabla para encabezado
-            PdfPTable encPdf = new PdfPTable(3);
-            encPdf.setWidthPercentage(100);
-            encPdf.setWidths(new float[]{20,75,30});            
+            encPdf.setWidths(new float[]{20, 75, 30});
             encPdf.getDefaultCell().setBorder(0);
             encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
             //agregar imagen
@@ -349,57 +315,116 @@ public class InformesDAO implements CRUD {
             //agregar imagen y encabezado a documento            
             documento.add(encPdf);
             documento.add(tituloInforme);
-            
+            //algoritmo que crea numero de columnas en automatico
+            PdfPTable tablaPdf = new PdfPTable(tabla.getColumnCount());
+            tablaPdf.setWidthPercentage(100);
+            tablaPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            //escribir nombre de columnas en pdf
+            for (int i = 0; i < tabla.getColumnCount(); i++) {
+                tablaPdf.addCell(tabla.getColumnName(i));
+            }
+            //escribir datos de la tabla al pdf
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                for (int j = 0; j < tabla.getColumnCount(); j++) {
+                    tablaPdf.addCell(tabla.getModel().getValueAt(i, j).toString());
+                }
+            }
+            documento.add(tablaPdf);
+            //cerrar documento
+            documento.close();
+            r = 1;
+        } catch (Exception e) {
+            RegistrarError("CONTROLADOR.InformesDAO.GenerarInformeBasicoPDF(javax.swing.JTtable tabla, String titulo)", e.getMessage().toString());
+        }
+        return r;
+    }
+
+    public int GenerarInformeCompletoPDF(javax.swing.JTable tabla, JFreeChart grafico, String titulo) {
+        int r = 0;
+        Document documento = new Document();
+
+        try {
+            String ruta = System.getProperty("user.home");
+            //ir a escritorio + nombre de archivo
+            java.util.Date fecha = new java.util.Date();
+            PdfWriter.getInstance(documento, new FileOutputStream(ruta + "/Desktop/" + titulo + new SimpleDateFormat("_ddMMyyyyHHmmss").format(fecha) + ".pdf"));
+            //abrir documento pdf
+            documento.open();
+            //Generar Encabezado
+            Image logo = Image.getInstance("src/IMAGENES/logoSmall.png");
+            logo.scaleToFit(80, 80);
+            logo.setAlignment(Chunk.ALIGN_LEFT);
+            Paragraph fechaInforme = new Paragraph();
+            fechaInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            fechaInforme.add(Chunk.NEWLINE);
+            fechaInforme.setFont(FontFactory.getFont("Tahoma", 12, Font.BOLD, BaseColor.DARK_GRAY));
+            fechaInforme.add("Fecha: " + new SimpleDateFormat("dd-MM-yyyy").format(fecha) + "\n\n");
+            Paragraph tituloInforme = new Paragraph();
+            tituloInforme.setAlignment(Paragraph.ALIGN_CENTER);
+            tituloInforme.add(Chunk.NEWLINE);
+            tituloInforme.setFont(FontFactory.getFont("Tahoma", 24, Font.BOLD, BaseColor.DARK_GRAY));
+            tituloInforme.add(titulo + "\n\n\n");
+            //crear tabla para encabezado
+            PdfPTable encPdf = new PdfPTable(3);
+            encPdf.setWidthPercentage(100);
+            encPdf.setWidths(new float[]{20, 75, 30});
+            encPdf.getDefaultCell().setBorder(0);
+            encPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
+            //agregar imagen
+            encPdf.addCell(logo);
+            encPdf.addCell("");
+            encPdf.addCell(fechaInforme);
+            //agregar imagen y encabezado a documento            
+            documento.add(encPdf);
+            documento.add(tituloInforme);
+
             //crear titutlo pagina
             Paragraph tituloPagina = new Paragraph();
             tituloPagina.setAlignment(Paragraph.ALIGN_CENTER);
             tituloPagina.add(Chunk.NEWLINE);
-            tituloPagina.setFont(FontFactory.getFont("Tahoma",18,Font.BOLD,BaseColor.DARK_GRAY));
-            tituloPagina.add(titulo+"\n\n");
-            
+            tituloPagina.setFont(FontFactory.getFont("Tahoma", 18, Font.BOLD, BaseColor.DARK_GRAY));
+            tituloPagina.add(titulo + "\n\n");
+
             //crear tabla para pagina con grafico
             PdfPTable cuerpoPDF = new PdfPTable(3);
             cuerpoPDF.setWidthPercentage(100);
-            cuerpoPDF.setWidths(new float[]{70,10,50});            
+            cuerpoPDF.setWidths(new float[]{70, 10, 50});
             cuerpoPDF.getDefaultCell().setBorder(0);
             cuerpoPDF.setHorizontalAlignment(Element.ALIGN_LEFT);
-            
+
             //crear imagen de grafico
             String direccionImagen = "src/IMAGENES/GRAFICOS/image.png";
-            ChartUtilities.saveChartAsPNG(new File(direccionImagen), grafico, 600,800);
+            ChartUtilities.saveChartAsPNG(new File(direccionImagen), grafico, 600, 800);
             Image imgGrafico = Image.getInstance(direccionImagen);
-            imgGrafico.scaleToFit(80,80);
-            imgGrafico.setAlignment(Chunk.ALIGN_LEFT);   
-            
-            
-            
+            imgGrafico.scaleToFit(80, 80);
+            imgGrafico.setAlignment(Chunk.ALIGN_LEFT);
+
             //algoritmo que crea numero de columnas en automatico
             PdfPTable tablaContenidoPdf = new PdfPTable(tabla.getColumnCount());
             tablaContenidoPdf.setWidthPercentage(100);
             tablaContenidoPdf.setHorizontalAlignment(Element.ALIGN_LEFT);
-            
+
             //escribir nombre de columnas en pdf
-            for (int i = 0; i < tabla.getColumnCount(); i++){
+            for (int i = 0; i < tabla.getColumnCount(); i++) {
                 tablaContenidoPdf.addCell(tabla.getColumnName(i));
             }
-            
+
             //escribir datos de la tabla al pdf
             for (int i = 0; i < tabla.getRowCount(); i++) {
-                for (int j = 0; j < tabla.getColumnCount(); j++) {                    
-                    tablaContenidoPdf.addCell(tabla.getModel().getValueAt(i,j).toString());                    
-                }                
-            }      
-            
+                for (int j = 0; j < tabla.getColumnCount(); j++) {
+                    tablaContenidoPdf.addCell(tabla.getModel().getValueAt(i, j).toString());
+                }
+            }
+
             cuerpoPDF.addCell(imgGrafico);
             cuerpoPDF.addCell("");
             cuerpoPDF.addCell(tablaContenidoPdf);
-            
-            
+
             documento.add(cuerpoPDF);
             documento.newPage();
             //cerrar documento
             documento.close();
-            r=1;
+            r = 1;
         } catch (Exception e) {
             RegistrarError("CONTROLADOR.InformesDAO.GenerarInformePDF(javax.swing.JTtable tabla,JFreechart chart, String titulo)", e.getMessage().toString());
         }
@@ -417,5 +442,5 @@ public class InformesDAO implements CRUD {
         //no se crea el metodo eliminar pues , no se utilizara, aun asi puede ser implementado a futuro sin problemas.
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
