@@ -1,6 +1,7 @@
 
 package VISTAS;
 
+import CONEXION_BD.Conexion;
 import java.awt.Image;
 import java.awt.Toolkit;
 import SEGURIDAD.Seguridad;
@@ -151,7 +152,7 @@ public class InicioSesion extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBtnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnConectarActionPerformed
-        
+        Conexion.SetUsuario("CONSULTA","@Portafolio2021");
         if(jTextRUT.getText().length()!=10){
             JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
         }else{

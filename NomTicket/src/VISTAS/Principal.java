@@ -53,6 +53,8 @@ public class Principal extends javax.swing.JFrame {
         jBUsuarios.setVisible(estado);
         jBInformes.setEnabled(estado);
         jBInformes.setVisible(estado);
+        jBCambioPrecio.setEnabled(estado);
+        jBCambioPrecio.setVisible(estado);
     }
 
     private void dibujarInterfaz() {
@@ -94,6 +96,7 @@ public class Principal extends javax.swing.JFrame {
         jBInformes = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jBPerfil = new javax.swing.JButton();
+        jBCambioPrecio = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jBCerrarSesion1 = new javax.swing.JButton();
         jBSalir = new javax.swing.JButton();
@@ -212,6 +215,13 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jBCambioPrecio.setText("HISTORIAL CAMBIO PRECIO");
+        jBCambioPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCambioPrecioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -226,7 +236,8 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jBPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))
+                    .addComponent(jBPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                    .addComponent(jBCambioPrecio, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -242,6 +253,8 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jBUsuarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jBInformes)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jBCambioPrecio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jBPerfil)
                 .addContainerGap())
@@ -385,6 +398,7 @@ public class Principal extends javax.swing.JFrame {
         JDPerfil jPerfil = new JDPerfil(new javax.swing.JDialog(), true);
         jPerfil.setCajero(usuario);
         cambiarModulo(jPerfil);
+        inicializar();
     }//GEN-LAST:event_jBPerfilActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
@@ -392,6 +406,11 @@ public class Principal extends javax.swing.JFrame {
         jLRut.setText(usuario.getRut_cajero());
         jLNombre.setText(usuario.getNombre());
     }//GEN-LAST:event_formWindowGainedFocus
+
+    private void jBCambioPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCambioPrecioActionPerformed
+        AdminHistorialCambioPrecio adminPrecio = new AdminHistorialCambioPrecio(new javax.swing.JDialog(), true);
+        cambiarModulo(adminPrecio);
+    }//GEN-LAST:event_jBCambioPrecioActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -426,6 +445,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCambioPrecio;
     private javax.swing.JButton jBCerrarSesion1;
     private javax.swing.JButton jBInformes;
     private javax.swing.JButton jBPerfil;

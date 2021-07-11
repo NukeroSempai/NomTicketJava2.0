@@ -65,13 +65,16 @@ public class JDPerfil extends javax.swing.JDialog {
         jTextClave1.setEnabled(false);
         String rut_caj = jTextRut.getText();
         String nombre_caj = jTextNombre.getText();
+        String claveR = clave;
         clave = seg.encriptar(clave);
         Object[] obj = new Object[3];
         obj[0] = rut_caj;
         obj[1] = nombre_caj;
         obj[2] = c.getRut_cajero();
         if (dao.actualizarPerfil(obj, clave) > 0) {
+            dao.CambiarClaveUsuario(rut_caj, claveR);
             JOptionPane.showMessageDialog(null, "Datos actualizados correctamente", "Éxito!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Por Favor volver a ingresar", "Aviso!", JOptionPane.WARNING_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "Error al actualizar los datos", "Error!", JOptionPane.ERROR_MESSAGE);
         }
@@ -282,7 +285,7 @@ public class JDPerfil extends javax.swing.JDialog {
                         clave2 += jTextClave2.getPassword()[i];
                     }
                     if (clave1.equals(clave2)) {
-                        Actualizar(clave1);
+                        Actualizar(clave1);                        
                         this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Ambas claves deben ser iguales", "Error!", JOptionPane.ERROR_MESSAGE);

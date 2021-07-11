@@ -47,11 +47,13 @@ public class Seguridad {
 
     public boolean iniciarSesion(String rut, String clave) {
         boolean autorizar = false;
-        String usuarioRecuperado = "";
+        String rutRecuperado = "";
         String ClaveRecuperada = "";
         String ClaveProcesada = generarHash(clave);
+        String usuario ="";
         int activo = 0;
-        String sql = "select rut_cajero,clave,estado from CAJERO where rut_cajero=?";
+        String sql = "select rut_cajero,clave,estado,usuario from vista_credenciales where rut_cajero=?";
+        Conexion.SetUsuario("CONSULTA","@Portafolio2021");
         //buscar y recuperar usuario y contraseña
         try {
             con = cn.Conectar();
@@ -59,19 +61,21 @@ public class Seguridad {
             ps.setString(1, rut);
             rs = ps.executeQuery();
             while (rs.next()) {
-                usuarioRecuperado = (rs.getString(1));
+                rutRecuperado = (rs.getString(1));
                 ClaveRecuperada = (rs.getString(2));
                 activo = rs.getInt("estado");
+                usuario = (rs.getString(4));
             }
             con.close();
         } catch (Exception e) {
             System.out.println("error en Seguridad =" + e.getMessage());
         }
         //comparar si son iguales  
-        if ((usuarioRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 1) {
+        if ((rutRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 1) {
             autorizar = true;
+            Conexion.SetUsuario(usuario, clave);
         }
-        if ((usuarioRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 0) {
+        if ((rutRecuperado.equals(rut)) && (ClaveRecuperada.equals(ClaveProcesada)) && activo == 0) {
             JOptionPane.showMessageDialog(null, "Usuario Deshabilitado", "error!", JOptionPane.ERROR_MESSAGE);
         }
         return autorizar;
@@ -115,11 +119,10 @@ public class Seguridad {
                 digito = "k";
             }
             //terminar de validar rut
-            System.out.println("resto = "+resto);
-            System.out.println("digito = "+digito);            
+            
             if (digito.charAt(0)==rut.charAt(rut.length()-1)) {
                 resultado = true;
-                System.out.println("veridicar");
+                System.out.println("rut valido");
             }
             
         } catch (Exception e) {

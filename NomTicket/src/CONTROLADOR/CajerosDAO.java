@@ -11,7 +11,10 @@ import java.util.List;
 /**
  *
  * @author Nukero
- * @version 1.0
+ * @version 2.0
+ * @Notas
+ * se cambia el sistema de creacion de usuario, ahora adicionalmente , se creara un usuario de oracle para la base de datos
+ * al cual se le otorgara el rol de cajero, este rol, tiene como finalidad, solamente interactuar con las tablas relacionadas con los cajeros.
  */
 public class CajerosDAO implements CRUD {
 
@@ -103,7 +106,7 @@ public class CajerosDAO implements CRUD {
     @Override
     public List listar() {
         List<CAJERO> lista = new ArrayList<>();
-        String sql = "select rut_cajero,nombre,fk_sucursal_id,administrador,estado from CAJERO order by fk_sucursal_id";
+        String sql = "select rut_cajero,nombre,fk_sucursal_id,administrador,estado from CAJERO where rut_cajero !='11111111-1' order by fk_sucursal_id";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -127,7 +130,7 @@ public class CajerosDAO implements CRUD {
     
     public List listar(int sucursal) {
         List<CAJERO> lista = new ArrayList<>();
-        String sql = "select rut_cajero,nombre,fk_sucursal_id,administrador,estado from CAJERO where fk_sucursal_id = ? order by fk_sucursal_id";
+        String sql = "select rut_cajero,nombre,fk_sucursal_id,administrador,estado from CAJERO where fk_sucursal_id = ? and rut_cajero !='11111111-1' order by fk_sucursal_id";
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -149,11 +152,77 @@ public class CajerosDAO implements CRUD {
         }
         return lista;
     }
-
+    
+    public void CrearUsuario(String rut,String clave) {        
+        rut = "USUARIO"+rut;
+        rut = rut.replace('-','_');
+        System.out.println(rut);
+        String sql = "{call SP_CREAR_USUARIO(?,?)}" ;        
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, rut);//USUARIO
+            ps.setString(2, clave);//CONTRASEÑA SIN ENCRIPTAR          
+            ps.executeQuery();
+            con.close();
+        } catch (Exception e) { 
+            RegistrarError("CONTROLADOR.CajerosDAO.Crear Usuario()", e.getMessage());
+        }
+    }
+    public void CambiarClaveUsuario(String rut,String clave) {        
+        rut = "USUARIO"+rut;
+        rut = rut.replace('-','_');
+        System.out.println(rut);
+        String sql = "{call SP_USUARIO_CAMBIAR_CLAVE(?,?)}" ;        
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, rut);//USUARIO
+            ps.setString(2, clave);//CONTRASEÑA SIN ENCRIPTAR          
+            ps.executeQuery();
+            con.close();
+        } catch (Exception e) { 
+            RegistrarError("CONTROLADOR.CajerosDAO.Crear Usuario()", e.getMessage());
+        }
+    }
+    
+    public void HacerAdmin(String rut) {        
+        rut = "USUARIO"+rut;
+        rut = rut.replace('-','_');
+        System.out.println(rut);
+        String sql = "{call SP_HACER_ADMIN(?)}" ;        
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, rut);//USUARIO                      
+            ps.executeQuery();
+            con.close();
+        } catch (Exception e) { 
+            RegistrarError("CONTROLADOR.CajerosDAO.Crear Usuario()", e.getMessage());
+        }
+    }
+    
+    public void QuitarAdmin(String rut) {        
+        rut = "USUARIO"+rut;
+        rut = rut.replace('-','_');
+        System.out.println(rut);
+        String sql = "{call SP_QUITAR_ADMIN(?)}" ;        
+        try {
+            con = cn.Conectar();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, rut);//USUARIO                      
+            ps.executeQuery();
+            con.close();
+        } catch (Exception e) { 
+            RegistrarError("CONTROLADOR.CajerosDAO.Crear Usuario()", e.getMessage());
+        }
+    }
     @Override
     public int add(Object[] o) {
         int r = 0;
-        String sql = "insert into CAJERO(rut_cajero,nombre,clave,fk_sucursal_id,administrador,estado)values(?,?,?,?,?,?)";
+        String sql = "insert into CAJERO(rut_cajero,nombre,clave,fk_sucursal_id,administrador,estado,usuario)values(?,?,?,?,?,?,?)";
+        String rut = "USUARIO"+o[0];
+        rut = rut.replace('-','_');
         try {
             con = cn.Conectar();
             ps = con.prepareStatement(sql);
@@ -162,7 +231,8 @@ public class CajerosDAO implements CRUD {
             ps.setObject(3, o[2]);//clave
             ps.setObject(4, o[3]);//sucursal
             ps.setObject(5, o[4]);//administrador
-            ps.setObject(6, o[5]);//estado            
+            ps.setObject(6, o[5]);//estado
+            ps.setString(7, rut);//usuario
             r = ps.executeUpdate();
             con.close();
         } catch (Exception e) {            

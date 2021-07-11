@@ -12,6 +12,7 @@ import java.util.List;
  *
  * @author Nukero
  * @version 1.0
+ * @version 1.1 se agrega listado de cambio de precios
  */
 public class ProductosDAO implements CRUD {
 
@@ -186,5 +187,5 @@ public class ProductosDAO implements CRUD {
             RegistrarError("CONTROLADOR.ProductosDAO.eliminar()", e.getMessage());
         }
         return r;
-    }
+    }    
 }

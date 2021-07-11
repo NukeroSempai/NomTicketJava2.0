@@ -35,7 +35,7 @@ public class JDCajero extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
-    
+
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("IMAGENES/icon2.png"));
         return retValue;
@@ -83,9 +83,11 @@ public class JDCajero extends javax.swing.JDialog {
         String nombre_caj = jTextNombre.getText();
         int sucursal = jComboSucursal.getSelectedIndex() + 1;
         String clave = "";
+        String claveR = "";
         for (int i = 0; i < jTextClave.getPassword().length; i++) {
             clave += jTextClave.getPassword()[i];
         }
+        claveR = clave;
         clave = seg.encriptar(clave);
         int administrador = jComboAdministrador.getSelectedIndex();
         int estado = jComboEstado.getSelectedIndex();
@@ -98,6 +100,10 @@ public class JDCajero extends javax.swing.JDialog {
         ob[4] = administrador;
         ob[5] = estado;
         if (dao.add(ob) > 0) {
+            dao.CrearUsuario(rut_caj, claveR);
+            if (administrador == 1) {
+                dao.HacerAdmin(rut_caj);
+            }
             JOptionPane.showMessageDialog(null, "Cajero Agregado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "Error al agregar Cajero", "Error!", JOptionPane.ERROR_MESSAGE);
@@ -119,6 +125,13 @@ public class JDCajero extends javax.swing.JDialog {
         obj[4] = estado;
         obj[5] = c.getRut_cajero();
         if (dao.actualizar(obj) > 0) {
+            if (administrador != c.getAdministrador()) {
+                if (administrador == 1) {
+                    dao.HacerAdmin(rut_caj);
+                } else {
+                    dao.QuitarAdmin(rut_caj);
+                }
+            }
             JOptionPane.showMessageDialog(null, "Cajero actualizado correctamente", "Exito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "Error al actualizar cajero", "Error!", JOptionPane.ERROR_MESSAGE);
@@ -131,6 +144,7 @@ public class JDCajero extends javax.swing.JDialog {
         String rut_caj = jTextRut.getText();
         String nombre_caj = jTextNombre.getText();
         int sucursal = jComboSucursal.getSelectedIndex() + 1;
+        String claveR = clave;
         clave = seg.encriptar(clave);
         int administrador = jComboAdministrador.getSelectedIndex();
         int estado = jComboEstado.getSelectedIndex();
@@ -140,13 +154,20 @@ public class JDCajero extends javax.swing.JDialog {
         obj[2] = sucursal;
         obj[3] = administrador;
         obj[4] = estado;
-        obj[5] = c.getRut_cajero();               
+        obj[5] = c.getRut_cajero();
         if (dao.actualizar(obj, clave) > 0) {
+            dao.CambiarClaveUsuario(rut_caj, claveR);
+            if (administrador != c.getAdministrador()) {
+                if (administrador == 1) {
+                    dao.HacerAdmin(rut_caj);
+                } else {
+                    dao.QuitarAdmin(rut_caj);
+                }
+            }
             JOptionPane.showMessageDialog(null, "Cajero actualizado correctamente", "Éxito!", JOptionPane.DEFAULT_OPTION);
         } else {
             JOptionPane.showMessageDialog(null, "Error al actualizar cajero", "Error!", JOptionPane.ERROR_MESSAGE);
         }
-        
 
     }
 
@@ -363,15 +384,20 @@ public class JDCajero extends javax.swing.JDialog {
     }//GEN-LAST:event_jBCancelarActionPerformed
 
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
-        if(jTextRut.getText().length()!=10){
+        if (jTextRut.getText().length() != 10) {
             JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
-        }else{
+        } else {
             if (seg.verificarRUT(jTextRut.getText()) == false) {
                 JOptionPane.showMessageDialog(null, "ERROR RUT NO VÁLIDO!", "Error!", JOptionPane.ERROR_MESSAGE);
             } else {
                 if (MODALIDAD == 0) {
-                    Agregar();
-                    this.dispose();
+                    if (jTextClave.getPassword().length != 0) {
+                        Agregar();
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Favor ingresar clave", "Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 }
                 if (MODALIDAD == 1) {
                     if (jTextClave.getPassword().length != 0) {
@@ -390,10 +416,10 @@ public class JDCajero extends javax.swing.JDialog {
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
     private void jCheckClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckClaveActionPerformed
-        if(jCheckClave.isSelected()){
+        if (jCheckClave.isSelected()) {
             jTextClave.setEnabled(true);
             jTextClave.setText("");
-        }else{
+        } else {
             jTextClave.setEnabled(false);
             jTextClave.setText("");
         }
