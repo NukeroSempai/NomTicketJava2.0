@@ -207,7 +207,7 @@ public class InformesDAO implements CRUD {
         }
 
         List<Object[]> lista = new ArrayList<>();
-        String sql = "select " + contador + ",count(dtb.fk_codigo_producto_id) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id"
+        String sql = "select " + contador + ",sum(dtb.cantidad) from detalle_boleta dtb join producto pro on dtb.fk_codigo_producto_id = pro.codigo_producto join tipo_producto tpr on tpr.id_tipo_producto = pro.fk_tipo_producto_id"
                 + "                                                                            where dtb.fk_num_boleta_id in ("
                 + "                                                                            select num_boleta from boleta where fecha_boleta BETWEEN trunc(?) and trunc(?)+1"
                 + "                                                                            )group by " + contador;

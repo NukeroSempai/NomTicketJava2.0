@@ -398,7 +398,9 @@ public class Principal extends javax.swing.JFrame {
         JDPerfil jPerfil = new JDPerfil(new javax.swing.JDialog(), true);
         jPerfil.setCajero(usuario);
         cambiarModulo(jPerfil);
-        inicializar();
+        if(JDPerfil.estado!=false){
+            inicializar();
+        }        
     }//GEN-LAST:event_jBPerfilActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus

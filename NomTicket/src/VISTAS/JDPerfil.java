@@ -18,6 +18,7 @@ import SEGURIDAD.Seguridad;
  */
 public class JDPerfil extends javax.swing.JDialog {
     
+    public static boolean estado;
     private Seguridad seg = new Seguridad();
     private CajerosDAO dao = new CajerosDAO();
     private CAJERO c = new CAJERO();
@@ -28,6 +29,7 @@ public class JDPerfil extends javax.swing.JDialog {
         initComponents();
         jTextClave1.setEnabled(false);
         jTextClave2.setEnabled(false);
+        estado = true;
     }
     
     public Image getIconImage() {
@@ -265,6 +267,7 @@ public class JDPerfil extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
+        estado = false;
         this.dispose();
     }//GEN-LAST:event_jBCancelarActionPerformed
 
